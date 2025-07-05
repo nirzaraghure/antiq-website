@@ -2293,23 +2293,34 @@
             const formData = new FormData(this);
             const data = Object.fromEntries(formData.entries());
 
-            // Simulate API call success/failure
-            // In a real application, you would send this data to your backend:
-            // const response = await fetch("/api/contact", { ... });
-            // const result = await response.json();
+            try {
+              const response = await fetch(
+                "http://localhost:5501/api/contact",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(data),
+                }
+              );
 
-            // For now, simulate success after a short delay
-            setTimeout(() => {
-              const success = true; // Change to false to simulate an error
-              if (success) {
+              const result = await response.json();
+
+              if (response.ok) {
                 showPopup("contactFormSuccess");
                 this.reset();
               } else {
                 showPopup("error");
                 document.getElementById("errorMessage").textContent =
-                  "Simulated: Failed to send message. (Backend needed)";
+                  result.message || "Failed to send message.";
               }
-            }, 1000); // Simulate network delay
+            } catch (error) {
+              console.error("Error:", error);
+              showPopup("error");
+              document.getElementById("errorMessage").textContent =
+                "Network error. Please try again later.";
+            }
           });
         }
 
