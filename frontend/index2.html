@@ -757,8 +757,9 @@
               data.quantity = parseInt(data.quantity, 10);
 
               try {
+                // *** IMPORTANT CHANGE HERE: Update the URL to your live backend URL ***
                 const response = await fetch(
-                  "http://localhost:5501/api/preorder",
+                  "https://antiq-website.onrender.com/api/preorder", // Changed from localhost to your live backend URL
                   {
                     method: "POST",
                     headers: {
