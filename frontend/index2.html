@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANTIQ - The Future of Music Experience</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+        /* Changed body background to match index.html's darker theme */
+        background-color: rgb(11, 11, 11);
+      }
+      /* Custom gradient background for the overall page */
+      .gradient-bg-full {
+        /* Adjusted gradient to be darker and more subtle, similar to index.html's overall dark tone */
+        background: linear-gradient(135deg, #111111 0%, #000000 100%);
+      }
+      /* Custom gradient text for the heading */
+      .gradient-text {
+        /* Changed to white to light gray gradient */
+        background: linear-gradient(90deg, #e0e0e0, #ffffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+      }
+      /* Styles for the custom music player elements */
+      .player-control-circle {
+        width: 24px;
+        height: 24px;
+        background-color: #4a4a4a; /* Dark gray */
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .player-control-circle:hover {
+        background-color: #6a6a6a;
+      }
+      .waveform-bar {
+        width: 4px;
+        /* Changed to a subtle light gray */
+        background-color: #f0f0f0;
+        margin: 0 1px;
+        border-radius: 2px;
+        animation: waveform-animation 1.5s ease-in-out infinite alternate;
+      }
+      /* Animation for the waveform bars */
+      @keyframes waveform-animation {
+        0% {
+          transform: scaleY(0.2);
+          opacity: 0.5;
+        }
+        50% {
+          transform: scaleY(1);
+          opacity: 1;
+        }
+        100% {
+          transform: scaleY(0.4);
+          opacity: 0.7;
+        }
+      }
+      /* Delay for individual bars to create a dynamic effect */
+      .waveform-bar:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .waveform-bar:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .waveform-bar:nth-child(3) {
+        animation-delay: 0.2s;
+      }
+      .waveform-bar:nth-child(4) {
+        animation-delay: 0.3s;
+      }
+      .waveform-bar:nth-child(5) {
+        animation-delay: 0.4s;
+      }
+      .waveform-bar:nth-child(6) {
+        animation-delay: 0.5s;
+      }
+      .waveform-bar:nth-child(7) {
+        animation-delay: 0.6s;
+      }
+      .waveform-bar:nth-child(8) {
+        animation-delay: 0.7s;
+      }
+      .waveform-bar:nth-child(9) {
+        animation-delay: 0.8s;
+      }
+      .waveform-bar:nth-child(10) {
+        animation-delay: 0.9s;
+      }
+      .waveform-bar:nth-child(11) {
+        animation-delay: 1s;
+      }
+      .waveform-bar:nth-child(12) {
+        animation-delay: 1.1s;
+      }
+      .waveform-bar:nth-child(13) {
+        animation-delay: 1.2s;
+      }
+      .waveform-bar:nth-child(14) {
+        animation-delay: 1.3s;
+      }
+      .waveform-bar:nth-child(15) {
+        animation-delay: 1.4s;
+      }
+
+      /* Custom style for the player box to match the image */
+      .player-box-custom {
+        background-color: #1a1a1a; /* Very dark background */
+        border-radius: 2.5rem; /* Rounded corners */
+        /* Adjusted shadow for a more subtle, integrated look */
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5),
+          0 5px 20px rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border */
+      }
+
+      /* Popup styles (copied from index.html) */
+      .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background: rgba(0, 0, 0, 0.6); /* More transparent overlay */
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(10px); /* Increased blur for glass effect */
+      }
+
+      .popup {
+        background: rgba(
+          20,
+          20,
+          20,
+          0.7
+        ); /* Transparent background for popup */
+        padding: 2rem; /* Decreased padding to reduce height */
+        border-radius: 15px; /* Slightly less rounded corners */
+        max-width: 500px; /* Increased max-width for wider form */
+        width: 90%;
+        max-height: 90vh; /* Set a max-height for the popup */
+        overflow-y: hidden; /* Prevent scrolling on the main popup */
+        text-align: center;
+        color: white; /* White text for contrast */
+        position: relative;
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.4); /* More pronounced glow */
+        animation: popupIn 0.5s ease-out forwards;
+        will-change: transform, opacity;
+        box-sizing: border-box; /* Ensure padding is included in width */
+        border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+      }
+
+      @keyframes popupIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .popup .close {
+        position: absolute;
+        top: 15px; /* Adjusted position */
+        right: 20px; /* Adjusted position */
+        font-size: 28px; /* Larger close button */
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.6); /* Lighter color for close button */
+        transition: all 0.3s ease;
+      }
+
+      .popup .close:hover {
+        transform: rotate(90deg);
+        color: white; /* White on hover */
+      }
+
+      .popup h2 {
+        font-size: 2rem; /* Larger heading */
+        margin-bottom: 1rem;
+        color: white;
+      }
+
+      .popup p {
+        font-size: 1.1rem; /* Larger paragraph text */
+        margin-bottom: 1.5rem;
+        opacity: 0.8;
+      }
+
+      /* Preorder form specific styles within the popup */
+      .preorder-form-popup {
+        overflow-y: auto; /* Add scroll to the form content */
+        /* Calculate max height for the form content, leaving space for title, paragraph, and button */
+        max-height: calc(90vh - 200px);
+        padding-right: 15px; /* Add padding for the scrollbar to not overlap content */
+        box-sizing: border-box; /* Include padding in width calculation */
+      }
+
+      /* Custom scrollbar for the form */
+      .preorder-form-popup::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .preorder-form-popup::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2); /* Darker, more subtle track */
+        border-radius: 4px;
+      }
+
+      .preorder-form-popup::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15); /* Darker, more subtle thumb */
+        border-radius: 4px;
+      }
+
+      .preorder-form-popup::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.25); /* Slightly lighter on hover */
+      }
+
+      .preorder-form-popup .form-group {
+        display: flex; /* Ensure flex for consistent stacking */
+        flex-direction: column; /* Stack label and input vertically */
+        margin-bottom: 1.5rem; /* Increased space between form groups */
+        align-items: flex-start; /* Align items to the start for left-aligned labels */
+      }
+
+      .preorder-form-popup label {
+        display: block; /* Ensure label takes its own line */
+        color: rgba(255, 255, 255, 0.9); /* Slightly brighter label color */
+        font-size: 1.05rem; /* Slightly larger label font */
+        margin-bottom: 0.6rem; /* Increased space between label and input */
+        font-weight: 500; /* Added medium font weight */
+        text-align: left; /* Explicitly left-align labels */
+        width: 100%; /* Ensure label takes full width for alignment */
+      }
+
+      .preorder-form-popup input[type="text"],
+      .preorder-form-popup input[type="email"],
+      .preorder-form-popup input[type="tel"],
+      .preorder-form-popup textarea,
+      .preorder-form-popup select {
+        /* Apply common styles to select as well */
+        background: rgba(
+          255,
+          255,
+          255,
+          0.1
+        ); /* Slightly brighter input background */
+        border: 1px solid rgba(255, 255, 255, 0.3); /* More visible border */
+        padding: 1.1rem; /* Increased padding for inputs */
+        border-radius: 8px; /* More rounded inputs */
+        color: white;
+        font-family: "Inter", sans-serif; /* Ensure Inter font */
+        font-size: 1rem; /* Larger input font size */
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+        width: 100%; /* Ensure inputs/selects take full width */
+        box-sizing: border-box; /* Include padding and border in element's total width and height */
+      }
+
+      /* Specific style for select element in preorder form, overriding common styles for appearance */
+      .preorder-form-popup select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Custom white arrow */
+        background-repeat: no-repeat;
+        background-position: right 0.8rem center;
+        background-size: 1.2em;
+        padding-right: 2.5rem; /* Space for the custom arrow */
+      }
+
+      /* Style for options within the select dropdown */
+      .preorder-form-popup select option {
+        background-color: rgb(20, 20, 20); /* Dark background for options */
+        color: white; /* White text for options */
+      }
+
+      .preorder-form-popup input[type="text"]:focus,
+      .preorder-form-popup input[type="email"]:focus,
+      .preorder-form-popup input[type="tel"]:focus,
+      .preorder-form-popup textarea:focus,
+      .preorder-form-popup select:focus {
+        background: rgba(
+          255,
+          255,
+          255,
+          0.15
+        ); /* Slightly less bright on focus */
+        border-color: rgba(
+          255,
+          255,
+          255,
+          0.5
+        ); /* Softer white border on focus */
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5); /* Darker, more subtle glow on focus */
+        outline: none; /* Ensure no default outline */
+      }
+
+      .preorder-form-popup .submit-btn {
+        /* Changed to white background with black text, similar to index.html's preorder button */
+        background: white;
+        color: black;
+        padding: 1.3rem; /* Larger button padding */
+        border-radius: 30px; /* Fully rounded button */
+        font-size: 1.15rem; /* Slightly larger button font */
+        font-weight: bold;
+        letter-spacing: 0.05em;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); /* Subtle black shadow */
+        transition: all 0.3s ease;
+      }
+
+      .preorder-form-popup .submit-btn:hover {
+        /* Darker gray on hover */
+        background: #ddd;
+        transform: translateY(-4px) scale(1.03); /* More pronounced hover effect */
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Styles for the navigation bar to match index.html */
+      .main-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        /* Added background and backdrop-filter similar to index.html */
+        background: rgba(11, 10, 10, 0.5);
+        backdrop-filter: blur(10px);
+        box-sizing: border-box;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: transform, background, padding;
+      }
+
+      /* Styles for radio buttons */
+      .radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .radio-option {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1rem;
+      }
+
+      .radio-option input[type="radio"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        margin-right: 0.8rem;
+        position: relative;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0; /* Prevent shrinking */
+      }
+
+      .radio-option input[type="radio"]:checked {
+        background-color: white;
+        border-color: white;
+      }
+
+      .radio-option input[type="radio"]:checked::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        background-color: rgb(11, 11, 11); /* Inner dot color */
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .radio-option:hover input[type="radio"] {
+        border-color: white;
+      }
+
+      /* Checkbox styles */
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        cursor: pointer;
+      }
+
+      .checkbox-group input[type="checkbox"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 4px;
+        margin-right: 0.8rem;
+        position: relative;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      .checkbox-group input[type="checkbox"]:checked {
+        background-color: white;
+        border-color: white;
+      }
+
+      .checkbox-group input[type="checkbox"]:checked::before {
+        content: "✔"; /* Checkmark symbol */
+        font-size: 14px;
+        color: rgb(11, 11, 11); /* Checkmark color */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        line-height: 1; /* Adjust line height for better centering */
+      }
+
+      .checkbox-group label {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.95rem;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen gradient-bg-full">
+    <!-- Top Nav Bar -->
+    <nav
+      class="w-full flex justify-between items-center px-6 md:px-12 py-6 main-nav"
+    >
+      <!-- Logo -->
+      <div class="text-white text-2xl font-semibold">ANTIQ</div>
+
+      <!-- Nav Items -->
+      <div class="flex items-center gap-6">
+        <a
+          href="index3.html#home"
+          class="text-white text-lg font-medium hover:text-purple-300 transition-colors duration-300"
+          >Home</a
+        >
+        <a
+          href="index3.html#features"
+          class="text-white text-lg font-medium hover:text-purple-300 transition-colors duration-300"
+          >Features</a
+        >
+        <!-- Updated Pre-order link to open form directly on this page -->
+        <a
+          href="#"
+          onclick="showPopup('preorder')"
+          class="text-white text-lg font-medium hover:text-purple-300 transition-colors duration-300"
+          >Pre-order</a
+        >
+        <!-- Updated Pre-order Now button to open form directly on this page -->
+        <button
+          onclick="showPopup('preorder')"
+          class="bg-white text-black font-semibold py-2 px-6 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75"
+        >
+          Pre-order Now
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="flex flex-col lg:flex-row w-full">
+      <!-- Left Section: Dark background with content -->
+      <div
+        class="lg:w-[55%] p-6 md:p-12 lg:p-20 flex flex-col justify-between relative z-10"
+      >
+        <!-- Hero Content -->
+        <main
+          class="flex-grow flex flex-col justify-center items-start text-left max-w-xl md:mx-0"
+        >
+          <h1
+            class="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6"
+          >
+            <span class="text-white">The Future of</span> <br />
+            <span class="gradient-text">Music Experience</span>
+          </h1>
+          <p class="text-gray-300 text-lg md:text-xl mb-10 leading-relaxed">
+            ANTIQ reimagines the classic radio for the modern era. Combining
+            vintage aesthetics with cutting-edge technology for an unparalleled
+            audio journey.
+          </p>
+
+          <!-- Call to Action Buttons -->
+          <div
+            class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-20 w-full sm:w-auto"
+          >
+            <!-- Updated Pre-order Now button to open form directly on this page -->
+            <button
+              onclick="showPopup('preorder')"
+              class="bg-white text-black font-semibold py-3 px-8 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75"
+            >
+              Pre-order Now
+            </button>
+            <button
+              class="bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-8 rounded-full border border-gray-700 shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-75"
+            >
+              Learn More
+            </button>
+          </div>
+        </main>
+
+        <!-- Feature Highlights -->
+        <div
+          class="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-auto mb-10 max-w-xl md:mx-0"
+        >
+          <div class="text-center sm:text-left">
+            <h3 class="text-white text-3xl font-bold rounded-md">24bit</h3>
+            <p class="text-gray-400 text-sm mt-1 rounded-md">Hi-Res Audio</p>
+          </div>
+          <div class="text-center sm:text-left">
+            <h3 class="text-white text-3xl font-bold rounded-md">30hr</h3>
+            <p class="text-gray-400 text-sm mt-1 rounded-md">Battery Life</p>
+          </div>
+          <div class="text-center sm:text-left">
+            <h3 class="text-white text-3xl font-bold rounded-md">AI</h3>
+            <p class="text-gray-400 text-sm mt-1 rounded-md">Powered</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Section: Music Player UI -->
+      <div
+        class="lg:w-[45%] p-6 md:p-12 lg:p-12 flex items-center justify-center relative z-10"
+      >
+        <!-- Custom player box with refined styling -->
+        <div
+          class="player-box-custom p-8 w-full max-w-xl h-[280px] flex flex-col justify-between items-center"
+        >
+          <!-- Top section for waveform -->
+          <div class="flex-grow flex items-center justify-center w-full mb-8">
+            <div class="flex items-end h-24 w-full justify-center">
+              <!-- Waveform bars -->
+              <div class="waveform-bar h-1/5"></div>
+              <div class="waveform-bar h-3/5"></div>
+              <div class="waveform-bar h-2/5"></div>
+              <div class="waveform-bar h-4/5"></div>
+              <div class="waveform-bar h-1/2"></div>
+              <div class="waveform-bar h-full"></div>
+              <div class="waveform-bar h-3/4"></div>
+              <div class="waveform-bar h-1/4"></div>
+              <div class="waveform-bar h-2/3"></div>
+              <div class="waveform-bar h-1/3"></div>
+              <div class="waveform-bar h-4/5"></div>
+              <div class="waveform-bar h-1/2"></div>
+              <div class="waveform-bar h-3/5"></div>
+              <div class="waveform-bar h-1/5"></div>
+              <div class="waveform-bar h-2/5"></div>
+            </div>
+          </div>
+
+          <!-- Player controls -->
+          <div class="flex justify-around items-center w-full px-4">
+            <div class="player-control-circle">
+              <!-- Volume Down Icon (Placeholder) -->
+              <svg
+                class="w-4 h-4 text-gray-300"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zM5 7a1 1 0 011 1v4a1 1 0 11-2 0V8a1 1 0 011-1zM15 7a1 1 0 011 1v4a1 1 0 11-2 0V8a1 1 0 011-1z"
+                ></path>
+              </svg>
+            </div>
+            <div
+              class="player-control-circle w-12 h-12 bg-gray-800 hover:bg-gray-700"
+            >
+              <!-- Play/Pause Icon (Placeholder) -->
+              <svg
+                class="w-6 h-6 text-white"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </div>
+            <div class="player-control-circle">
+              <!-- Headphones Icon (Placeholder) -->
+              <svg
+                class="w-4 h-4 text-gray-300"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zm-2 2a1 1 0 00-1 1v3a1 1 0 001 1h2a1 1 0 001-1V9a1 1 0 00-1-1H9z"
+                ></path>
+              </svg>
+            </div>
+            <div class="player-control-circle">
+              <!-- Volume Up Icon (Placeholder) -->
+              <svg
+                class="w-4 h-4 text-gray-300"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zM5 7a1 1 0 011 1v4a1 1 0 11-2 0V8a1 1 0 011-1zM15 7a1 1 0 011 1v4a1 1 0 11-2 0V8a1 1 0 011-1z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Text -->
+    <div
+      class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-opacity-10 text-5xl md:text-6xl font-extrabold tracking-widest pointer-events-none whitespace-nowrap z-0"
+    >
+      EXPERIENCE THE REVOLUTION
+    </div>
+
+    <!-- Popup Overlay (Copied from index.html) -->
+    <div class="popup-overlay" id="popupOverlay">
+      <div class="popup">
+        <button class="close" onclick="hidePopup()">×</button>
+        <div id="popupContent"></div>
+      </div>
+    </div>
+
+    <script>
+      // Product data for the preorder form (Copied from index.html)
+      const products = [
+        { id: "classic", name: "ANTIQ Classic", price: "$899" },
+        { id: "pro", name: "ANTIQ Pro", price: "$1,299" },
+        { id: "mini", name: "ANTIQ Mini", price: "$599" },
+        { id: "studio", name: "ANTIQ Studio", price: "$1,899" },
+      ];
+
+      /**
+       * Shows a generic popup with specified content. (Copied and adapted from index.html)
+       */
+      function showPopup(type) {
+        const popupOverlay = document.getElementById("popupOverlay");
+        const popupContent = document.getElementById("popupContent");
+
+        let content = "";
+        if (type === "preorder") {
+          // Dynamically generate product options for radio buttons
+          let modelRadioOptions = products
+            .map(
+              (product) => `
+                        <label class="radio-option">
+                            <input type="radio" name="model" value="${product.id}" required>
+                            ${product.name} - ${product.price}
+                        </label>
+                        `
+            )
+            .join("");
+
+          content = `
+                    <h2>Preorder ANTIQ Radio</h2>
+                    <p>Be among the first to experience the ANTIQ radio. Fill out the form below to reserve yours.</p>
+                    <form id="preorderFormPopup" class="preorder-form-popup">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="emailAddress">Email Address</label>
+                            <input type="email" id="emailAddress" name="email" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input type="tel" id="phoneNumber" name="phone" />
+                        </div>
+                        <div class="form-group">
+                            <label for="shippingAddress">Shipping Address</label>
+                            <textarea id="shippingAddress" name="address" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Select Model</label>
+                            <div class="radio-group">
+                                ${modelRadioOptions}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="color">Preferred Color</label>
+                            <input type="text" id="color" name="notes" placeholder="e.g., Black, Silver, Custom" />
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Quantity</label>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" required />
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="termsAndConditions" name="termsAndConditions" required />
+                            <label for="termsAndConditions">I agree to the terms and conditions</label>
+                        </div>
+                        <button type="submit" class="submit-btn">COMPLETE PRE-ORDER</button>
+                    </form>
+                `;
+        } else if (type === "preorderSuccess") {
+          content = `
+                    <h2>Preorder Confirmed!</h2>
+                    <p>Thank you for your preorder. We'll notify you when ANTIQ radio is ready for shipment.</p>
+                    <button class="submit-btn" onclick="hidePopup()">Close</button>
+                `;
+        } else if (type === "error") {
+          content = `
+                    <h2>Error!</h2>
+                    <p id="errorMessage"></p>
+                    <button class="submit-btn" onclick="hidePopup()">Close</button>
+                `;
+        }
+
+        popupContent.innerHTML = content;
+        popupOverlay.style.display = "flex";
+
+        if (type === "preorder") {
+          const preorderForm = document.getElementById("preorderFormPopup");
+          if (preorderForm) {
+            preorderForm.addEventListener("submit", async function (event) {
+              event.preventDefault();
+              const formData = new FormData(this);
+              const data = Object.fromEntries(formData.entries());
+
+              // Ensure quantity is a number
+              data.quantity = parseInt(data.quantity, 10);
+
+              try {
+                const response = await fetch(
+                  "http://localhost:5501/api/preorder",
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                  }
+                );
+
+                const result = await response.json();
+
+                if (response.ok) {
+                  hidePopup();
+                  showPopup("preorderSuccess");
+                  this.reset();
+                } else {
+                  hidePopup();
+                  showPopup("error");
+                  document.getElementById("errorMessage").textContent =
+                    result.message || "Failed to submit preorder.";
+                }
+              } catch (error) {
+                console.error("Error:", error);
+                hidePopup();
+                showPopup("error");
+                document.getElementById("errorMessage").textContent =
+                  "Network error. Please try again later.";
+              }
+            });
+          }
+        }
+      }
+
+      /**
+       * Hides the currently active popup. (Copied from index.html)
+       */
+      function hidePopup() {
+        const popupOverlay = document.getElementById("popupOverlay");
+        popupOverlay.style.display = "none";
+      }
+
+      // Removed the URL parameter check that redirected to index.html
+      // document.addEventListener('DOMContentLoaded', () => {
+      //     const urlParams = new URLSearchParams(window.location.search);
+      //     if (urlParams.get('openPreorder') === 'true') {
+      //         window.location.href = 'index.html?openPreorder=true';
+      //     }
+      // });
+    </script>
+  </body>
+</html>

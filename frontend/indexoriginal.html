@@ -1,0 +1,2331 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANTIQ Radio Experience</title>
+    <style>
+      /* Custom scrollbar styles */
+      ::-webkit-scrollbar {
+        width: 8px;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.5);
+      }
+
+      body.scrollbar-visible::-webkit-scrollbar {
+        opacity: 1;
+      }
+
+      /* Base styles */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Inter", sans-serif;
+        background-color: rgb(11, 11, 11);
+        color: white;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Navigation Styles */
+      .main-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        background: rgba(11, 10, 10, 0.5);
+        backdrop-filter: blur(10px);
+        box-sizing: border-box;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: transform, background, padding;
+      }
+
+      .main-nav.scrolled {
+        background: rgba(0, 0, 0, 0.8);
+        padding: 0.5rem 2rem;
+      }
+
+      .nav-logo {
+        height: 60px;
+        width: 55px;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        font-family: "Inter", sans-serif;
+        letter-spacing: 0.1em;
+        font-size: 0.9rem;
+        font-weight: bold;
+        white-space: nowrap;
+        will-change: transform;
+      }
+
+      .main-nav.scrolled .nav-logo {
+        height: 50px;
+        width: 45px;
+      }
+
+      .nav-logo img {
+        height: 100%;
+        width: auto;
+        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: transform;
+      }
+
+      .nav-logo:hover img {
+        transform: rotate(15deg) scale(1.1);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        margin-right: 1rem;
+        align-items: center;
+      }
+
+      .nav-link {
+        color: white;
+        text-decoration: none;
+        font-size: 0.9rem;
+        letter-spacing: 0.05em;
+        position: relative;
+        padding: 0.5rem 0;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        white-space: nowrap;
+        will-change: transform, color;
+      }
+
+      .nav-link:hover {
+        color: #aaa;
+        transform: translateY(-2px);
+      }
+
+      /* Removed underline from hover and active states */
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0; /* No underline */
+        height: 2px;
+        background: transparent; /* No underline */
+        transition: none; /* No transition for underline */
+      }
+
+      .nav-link.active {
+        color: #fff;
+        font-weight: bold;
+      }
+
+      /* New style for the Preorder button */
+      .nav-preorder-button {
+        background-color: white;
+        color: black !important; /* Use !important to override .nav-link color */
+        padding: 0.5rem 1rem;
+        border-radius: 20px; /* Increased border-radius for more rounded corners */
+        font-weight: bold;
+        text-decoration: none; /* Ensure no underline */
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: transform, background, color;
+      }
+
+      .nav-preorder-button:hover {
+        background-color: #ddd;
+        transform: translateY(-2px);
+        color: black !important; /* Keep text black on hover */
+      }
+
+      /* Hamburger menu icon */
+      .hamburger-menu {
+        display: none; /* Hidden by default, shown on mobile */
+        cursor: pointer;
+        font-size: 1.8rem;
+        color: white;
+        z-index: 101; /* Above other nav elements */
+      }
+
+      /* Mobile menu overlay */
+      .mobile-menu-overlay {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(11, 10, 10, 0.95);
+        backdrop-filter: blur(15px);
+        z-index: 99; /* Below main nav, above content */
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+
+      .mobile-menu-overlay.active {
+        display: flex;
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .mobile-menu-overlay .nav-links {
+        flex-direction: column;
+        gap: 2rem;
+        margin-right: 0;
+      }
+
+      .mobile-menu-overlay .nav-link {
+        font-size: 1.5rem;
+        padding: 0.8rem 0;
+      }
+
+      /* Close button for mobile menu */
+      .mobile-menu-close {
+        position: absolute;
+        top: 1.5rem;
+        right: 2rem;
+        font-size: 2rem;
+        color: white;
+        cursor: pointer;
+        background: none;
+        border: none;
+      }
+
+      /* Model Canvas Styles */
+      #model-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 0; /* Behind content sections */
+        transition: all 0.5s ease;
+        pointer-events: none; /* Allow clicks to pass through to content by default */
+        cursor: grab; /* Indicate interactivity */
+      }
+
+      /* When the model container is interactive, allow pointer events */
+      #model-container.interactive {
+        pointer-events: auto;
+      }
+
+      /* Full-screen model view (for home section) */
+      .full-model-view {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 1; /* Above model-container, below content */
+      }
+
+      /* Content Sections */
+      .content-sections {
+        position: relative;
+        z-index: 2; /* Above model-container */
+        margin-top: 100vh; /* Start content after the initial full model view */
+      }
+
+      .content-section {
+        min-height: 100vh;
+        padding: 0; /* Content half will handle padding */
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Center the split-view container */
+      }
+
+      /* Split view container */
+      .split-view {
+        display: flex;
+        width: 100%;
+        max-width: 1200px; /* Max width for content area */
+        min-height: 80vh; /* Adjusted height for split view content */
+        margin: 5vh auto; /* Vertical margin to float the content block */
+      }
+
+      /* Content half in split view */
+      .content-half {
+        width: 50%;
+        padding: 3rem; /* Adjusted padding */
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: transparent; /* Changed to transparent */
+        border: none; /* Removed border */
+        border-radius: 1rem;
+        box-shadow: none; /* Removed box-shadow */
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+      }
+
+      /* Specific alignment for content-half */
+      .content-section.align-right .content-half {
+        margin-left: auto; /* Pushes content to the right */
+        margin-right: 0;
+      }
+
+      .content-section.align-left .content-half {
+        margin-right: auto; /* Pushes content to the left */
+        margin-left: 0;
+      }
+
+      .section-title {
+        font-size: 3rem;
+        margin-bottom: 2rem;
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: transform;
+      }
+
+      .section-title:hover {
+        transform: translateX(10px);
+      }
+
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: white;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: width;
+      }
+
+      .section-title:hover::after {
+        width: 80px;
+      }
+
+      .section-content {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        opacity: 0.5; /* Made text content more transparent */
+        text-shadow: none; /* Removed text shadow */
+      }
+
+      /* ION Intro Styles */
+      .intro {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        opacity: 1;
+        z-index: 1000;
+        will-change: opacity, transform; /* Added transform for GSAP */
+      }
+
+      .intro .intro-text {
+        /* This is the element that will be animated */
+        opacity: 0;
+        transform: scale(0.5);
+        will-change: opacity, transform;
+      }
+
+      .ion-main {
+        opacity: 0; /* Controlled by GSAP */
+        z-index: 3;
+        position: relative;
+        will-change: opacity;
+      }
+
+      .ion-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start; /* Align content to the top of the container */
+        height: 100vh;
+        padding-top: 15vh; /* Push content down from the very top, adjust as needed */
+        transform: scale(1.5); /* Controlled by GSAP */
+        opacity: 0; /* Controlled by GSAP */
+        will-change: transform, opacity;
+      }
+
+      .ion-headline {
+        margin-top: 2rem;
+        font-size: 1.2rem; /* Increased font size */
+        text-align: center;
+        opacity: 0.85;
+        transition: all 0.3s ease;
+        will-change: transform, opacity;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.2); /* Subtle text shadow */
+      }
+
+      .ion-headline:hover {
+        transform: translateY(-5px);
+        color: #aaa;
+        opacity: 1;
+      }
+
+      .ion-title {
+        font-size: 6rem;
+        font-weight: bold;
+        letter-spacing: 0.1em;
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
+          0 0 40px rgba(255, 255, 255, 0.5); /* More intense glow */
+        will-change: transform, text-shadow;
+        display: inline-block; /* Required for span children to layout correctly */
+        position: relative; /* For sparkle effect positioning */
+      }
+
+      .ion-title:hover {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        transform: scale(1.02);
+      }
+
+      .antiq-letter {
+        display: inline-block;
+        opacity: 0;
+        transform: rotateX(90deg) translateY(20px);
+        transform-origin: bottom center;
+        transition: all 0.3s ease;
+      }
+
+      .ion-title:hover .antiq-letter {
+        animation: jiggle 0.5s infinite alternate;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+          0 0 20px rgba(255, 255, 255, 0.6);
+      }
+
+      @keyframes jiggle {
+        0% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-3px) rotate(1deg);
+        }
+        100% {
+          transform: translateY(0px) rotate(-1deg);
+        }
+      }
+
+      /* Feature Highlights */
+      .feature-highlights {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .feature-card {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 2rem;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.2); /* More distinct border */
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: transform, background, box-shadow;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); /* More pronounced shadow */
+      }
+
+      .feature-card:hover {
+        background: rgba(
+          255,
+          255,
+          255,
+          0.1
+        ); /* Slightly brighter background on hover */
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .feature-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .feature-card p {
+        font-size: 1rem;
+        opacity: 0.8;
+      }
+
+      /* Specifications Section */
+      .specs-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .spec-item {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .spec-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .spec-item h4 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .spec-item p {
+        font-size: 0.9rem;
+        opacity: 0.7;
+      }
+
+      /* Testimonials Section */
+      .testimonials {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .testimonial-card {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 2rem;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.2); /* More distinct border */
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); /* More pronounced shadow */
+      }
+
+      .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        background: rgba(
+          255,
+          255,
+          255,
+          0.1
+        ); /* Slightly brighter background on hover */
+      }
+
+      .testimonial-card p {
+        font-style: italic;
+        margin-bottom: 1rem;
+      }
+
+      .testimonial-author {
+        font-weight: bold;
+        opacity: 0.9;
+      }
+
+      /* Contact Form Styles */
+      .contact-form {
+        margin-top: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Reduced gap for a shorter form */
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1rem; /* Added margin-bottom for spacing between groups */
+      }
+
+      .form-group label {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        text-align: left; /* Align labels to the left */
+        margin-bottom: 0.25rem; /* Small space between label and input */
+      }
+
+      .form-group input,
+      .form-group textarea {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 0.8rem;
+        border-radius: 5px;
+        color: white;
+        font-family: inherit;
+        transition: all 0.3s ease;
+        width: 100%; /* Make inputs take full width */
+        box-sizing: border-box; /* Include padding and border in element's total width and height */
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: white;
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.3); /* Subtle glow on focus */
+      }
+
+      .form-group textarea {
+        min-height: 80px; /* Reduced min-height for a shorter form */
+        resize: vertical;
+      }
+
+      .submit-btn {
+        background: white;
+        color: black;
+        border: none;
+        padding: 1rem;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: transform, background;
+        width: 100%; /* Make button take full width */
+        box-sizing: border-box;
+      }
+
+      .submit-btn:hover {
+        background: #ddd;
+        transform: translateY(-2px);
+      }
+
+      /* Menu Section Styles */
+      .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .menu-item {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.2); /* More distinct border */
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: transform, box-shadow;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); /* More pronounced shadow */
+      }
+
+      .menu-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        background: rgba(
+          255,
+          255,
+          255,
+          0.1
+        ); /* Slightly brighter background on hover */
+      }
+
+      .menu-item h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .menu-item p {
+        opacity: 0.8;
+        font-size: 0.9rem;
+      }
+
+      .menu-price {
+        font-weight: bold;
+        margin-top: 0.5rem;
+        color: rgba(255, 255, 255, 0.9);
+        transition: all 0.3s ease;
+      }
+
+      .menu-item:hover .menu-price {
+        color: white;
+      }
+
+      /* About Section Styles */
+      .about-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .about-image {
+        width: 100%;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        opacity: 0.7;
+        transition: all 0.3s ease;
+      }
+
+      .about-image:hover {
+        opacity: 1;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Services Section Styles */
+      .services-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .service-item {
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 10px;
+        border-left: 3px solid white;
+        border: 1px solid rgba(255, 255, 255, 0.2); /* More distinct border */
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: transform, box-shadow;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); /* More pronounced shadow */
+      }
+
+      .service-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        background: rgba(
+          255,
+          255,
+          255,
+          0.1
+        ); /* Slightly brighter background on hover */
+      }
+
+      .service-item h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Popup styles */
+      .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background: rgba(0, 0, 0, 0.6); /* More transparent overlay */
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(10px); /* Increased blur for glass effect */
+      }
+
+      .popup {
+        background: rgba(
+          20,
+          20,
+          20,
+          0.7
+        ); /* Transparent background for popup */
+        padding: 2.5rem; /* Increased padding */
+        border-radius: 15px; /* Slightly less rounded corners */
+        max-width: 450px; /* Slightly wider */
+        width: 90%;
+        text-align: center;
+        color: white; /* White text for contrast */
+        position: relative;
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.4); /* More pronounced glow */
+        animation: popupIn 0.5s ease-out forwards;
+        will-change: transform, opacity;
+        box-sizing: border-box; /* Ensure padding is included in width */
+        border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+      }
+
+      @keyframes popupIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .popup .close {
+        position: absolute;
+        top: 15px; /* Adjusted position */
+        right: 20px; /* Adjusted position */
+        font-size: 28px; /* Larger close button */
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.6); /* Lighter color for close button */
+        transition: all 0.3s ease;
+      }
+
+      .popup .close:hover {
+        transform: rotate(90deg);
+        color: white; /* White on hover */
+      }
+
+      .popup h2 {
+        font-size: 2rem; /* Larger heading */
+        margin-bottom: 1rem;
+        color: white;
+      }
+
+      .popup p {
+        font-size: 1.1rem; /* Larger paragraph text */
+        margin-bottom: 1.5rem;
+        opacity: 0.8;
+      }
+
+      /* Preorder form specific styles within the popup */
+      .preorder-form-popup .form-group {
+        margin-bottom: 1.2rem; /* More space between form groups */
+      }
+
+      .preorder-form-popup label {
+        color: rgba(255, 255, 255, 0.8); /* Lighter label color */
+        font-size: 1rem; /* Slightly larger label font */
+        margin-bottom: 0.5rem; /* Space between label and input */
+      }
+
+      .preorder-form-popup input,
+      .preorder-form-popup textarea {
+        background: rgba(
+          255,
+          255,
+          255,
+          0.08
+        ); /* Slightly darker input background */
+        border: 1px solid rgba(255, 255, 255, 0.25); /* More visible border */
+        padding: 1rem; /* Increased padding for inputs */
+        border-radius: 8px; /* More rounded inputs */
+        color: white;
+        font-family: "Inter", sans-serif; /* Ensure Inter font */
+        font-size: 1rem; /* Larger input font size */
+        transition: all 0.3s ease;
+      }
+
+      /* Specific style for select element in preorder form */
+      .preorder-form-popup select {
+        background: rgba(
+          255,
+          255,
+          255,
+          0.08
+        ); /* Slightly darker input background */
+        border: 1px solid rgba(255, 255, 255, 0.25); /* More visible border */
+        padding: 1rem; /* Increased padding for inputs */
+        border-radius: 8px; /* More rounded inputs */
+        color: white; /* Set font color to white */
+        font-family: "Inter", sans-serif; /* Ensure Inter font */
+        font-size: 1rem; /* Larger input font size */
+        transition: all 0.3s ease;
+        -webkit-appearance: none; /* Remove default arrow on WebKit browsers */
+        -moz-appearance: none; /* Remove default arrow on Firefox */
+        appearance: none; /* Remove default arrow */
+        background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Custom white arrow */
+        background-repeat: no-repeat;
+        background-position: right 0.8rem center;
+        background-size: 1.2em;
+        padding-right: 2.5rem; /* Space for the custom arrow */
+      }
+
+      /* Style for options within the select dropdown */
+      .preorder-form-popup select option {
+        background-color: rgb(20, 20, 20); /* Dark background for options */
+        color: white; /* White text for options */
+      }
+
+      .preorder-form-popup input:focus,
+      .preorder-form-popup select:focus,
+      .preorder-form-popup textarea:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: #fff; /* White border on focus */
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Stronger glow on focus */
+      }
+
+      .preorder-form-popup .submit-btn {
+        background: linear-gradient(
+          45deg,
+          #007bff,
+          #00c6ff
+        ); /* Blue gradient button */
+        color: white;
+        padding: 1.2rem; /* Larger button padding */
+        border-radius: 30px; /* Fully rounded button */
+        font-size: 1.1rem; /* Larger button font */
+        font-weight: bold;
+        letter-spacing: 0.05em;
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4); /* Blue shadow */
+        transition: all 0.3s ease;
+      }
+
+      .preorder-form-popup .submit-btn:hover {
+        background: linear-gradient(
+          45deg,
+          #0056b3,
+          #0099cc
+        ); /* Darker gradient on hover */
+        transform: translateY(-3px) scale(1.02); /* More pronounced hover effect */
+        box-shadow: 0 8px 20px rgba(0, 123, 255, 0.6);
+      }
+
+      /* Success message (kept for potential alternative use, but popup is primary) */
+      .success-message {
+        position: fixed;
+        bottom: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 200, 0, 0.9);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 5px;
+        z-index: 1001;
+        transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .success-message.show {
+        bottom: 20px;
+      }
+
+      /* Scroll-based fade-in styles */
+      .fade-in-element {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1),
+          transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+        will-change: opacity, transform;
+      }
+
+      .fade-in-element.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Footer Styles */
+      .footer {
+        background-color: rgb(11, 11, 11);
+        color: rgba(255, 255, 255, 0.7);
+        padding: 3rem 2rem;
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.9rem;
+        margin-top: 15rem; /* Adjusted margin to push it down from contact form */
+      }
+
+      .footer-links {
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .footer-link {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .footer-link:hover {
+        color: white;
+      }
+
+      .social-icons {
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+      }
+
+      .social-icon {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.5rem;
+        transition: color 0.3s ease, transform 0.3s ease;
+      }
+
+      .social-icon:hover {
+        color: white;
+        transform: translateY(-3px);
+      }
+
+      /* Model Angle Display */
+      .model-angle-display {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.6); /* Darker, more opaque background */
+        backdrop-filter: blur(8px); /* Stronger blur */
+        padding: 1rem 1.5rem; /* More padding */
+        border-radius: 12px; /* More rounded corners */
+        color: white;
+        font-size: 0.9rem; /* Slightly larger font */
+        z-index: 50; /* Above content, below popups */
+        opacity: 0.9; /* More opaque */
+        pointer-events: none; /* Do not block clicks */
+        font-family: monospace; /* Monospace font for code-like display */
+        line-height: 1.5; /* Better line spacing */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .main-nav {
+          padding: 0.8rem 1.5rem; /* Adjust padding for smaller screens */
+        }
+
+        .nav-links {
+          display: none; /* Hide desktop nav links */
+        }
+
+        .nav-preorder {
+          display: none; /* Hide desktop preorder button */
+        }
+
+        .hamburger-menu {
+          display: block; /* Show hamburger menu icon */
+        }
+
+        .split-view {
+          flex-direction: column;
+        }
+
+        .content-half {
+          width: 100%;
+          height: auto; /* Allow height to adjust based on content */
+          padding: 2rem;
+          min-height: unset; /* Remove min-height for mobile */
+        }
+
+        .ion-title {
+          font-size: 3rem;
+        }
+
+        .section-title {
+          font-size: 2rem;
+        }
+
+        .section-content {
+          font-size: 1rem;
+        }
+
+        .popup {
+          padding: 1.5rem; /* Smaller padding on mobile */
+          max-width: 90%; /* Ensure it doesn't overflow on very small screens */
+        }
+
+        .popup h2 {
+          font-size: 1.5rem; /* Smaller heading on mobile */
+        }
+
+        .popup p {
+          font-size: 0.9rem; /* Smaller paragraph on mobile */
+        }
+
+        .preorder-form-popup input,
+        .preorder-form-popup select,
+        .preorder-form-popup textarea {
+          padding: 0.8rem; /* Smaller input padding on mobile */
+          font-size: 0.9rem; /* Smaller input font on mobile */
+        }
+
+        .preorder-form-popup .submit-btn {
+          padding: 1rem; /* Smaller button padding on mobile */
+          font-size: 1rem; /* Smaller button font on mobile */
+        }
+
+        .menu-grid,
+        .specs-grid,
+        .testimonials {
+          grid-template-columns: 1fr; /* Stack columns on mobile */
+          gap: 1.5rem;
+        }
+
+        .footer {
+          padding: 2rem 1rem;
+        }
+
+        .model-angle-display {
+          font-size: 0.7rem; /* Smaller font for mobile */
+          padding: 0.6rem 1rem;
+          bottom: 10px;
+          left: 10px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .ion-title {
+          font-size: 2.5rem; /* Further adjusted for very small screens */
+        }
+        .ion-headline {
+          font-size: 1rem;
+        }
+        .section-title {
+          font-size: 1.8rem;
+        }
+        .section-content {
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome for social media icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body>
+    <nav class="main-nav">
+      <div class="nav-logo">
+        <!-- Placeholder for logo image -->
+        <img
+          src="https://placehold.co/60x55/ffffff/000000?text=LOGO"
+          alt="ANTIQ Logo"
+        />
+      </div>
+      <!-- Hamburger menu icon for mobile -->
+      <div class="hamburger-menu" id="hamburgerMenu">
+        <i class="fas fa-bars"></i>
+      </div>
+      <div class="nav-links">
+        <a href="#home" class="nav-link active">HOME</a>
+        <a href="#menu" class="nav-link">PRODUCTS</a>
+        <a href="#about" class="nav-link">ABOUT</a>
+        <a href="#services" class="nav-link">SERVICES</a>
+        <a href="#contact" class="nav-link">CONTACT</a>
+        <!-- Changed to nav-link class -->
+        <a href="index2.html" class="nav-link nav-preorder-button">PREORDER</a>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+      <button class="mobile-menu-close" id="mobileMenuClose">×</button>
+      <div class="nav-links">
+        <a href="#home" class="nav-link active" data-section="home">HOME</a>
+        <a href="#menu" class="nav-link" data-section="menu">PRODUCTS</a>
+        <a href="#about" class="nav-link" data-section="about">ABOUT</a>
+        <a href="#services" class="nav-link" data-section="services"
+          >SERVICES</a
+        >
+        <a href="#contact" class="nav-link" data-section="contact">CONTACT</a>
+        <!-- Changed to nav-link class -->
+        <a href="index2.html" class="nav-link nav-preorder-button">PREORDER</a>
+      </div>
+    </div>
+
+    <!-- Success message (kept for potential alternative use, but popup is primary) -->
+    <div class="success-message" id="successMessage">
+      Thank you! We'll notify you soon.
+    </div>
+
+    <!-- Main container for the fixed 3D model canvas -->
+    <div id="model-container" class="interactive"></div>
+
+    <!-- UI element to display model angles -->
+    <div id="model-angle-display" class="model-angle-display">
+      Y: 0.0° | X: 0.0°
+    </div>
+
+    <div class="intro">
+      <div class="intro-text">INTRODUCING THE FUTURE</div>
+    </div>
+
+    <section id="home">
+      <div class="ion-main">
+        <div class="ion-container">
+          <div class="ion-headline" id="ion-headline">
+            YOUR NEW SMART RADIO, REIMAGINED.
+          </div>
+          <div class="ion-title" id="antiq-title">
+            <span class="antiq-letter">A</span>
+            <span class="antiq-letter">N</span>
+            <span class="antiq-letter">T</span>
+            <span class="antiq-letter">I</span>
+            <span class="antiq-letter">Q</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="content-sections">
+      <section class="content-section align-right" id="menu">
+        <div class="split-view">
+          <div class="content-half">
+            <h2 class="section-title fade-in-element">Our Product Menu</h2>
+            <div class="section-content">
+              <p class="fade-in-element">
+                Explore our range of premium audio products designed for the
+                modern listener.
+              </p>
+              <div class="menu-grid">
+                <div class="menu-item fade-in-element">
+                  <h3>ANTIQ Classic</h3>
+                  <p>The original model with all the signature features.</p>
+                  <div class="menu-price">$899</div>
+                </div>
+                <div class="menu-item fade-in-element">
+                  <h3>ANTIQ Pro</h3>
+                  <p>Enhanced version with extended frequency range.</p>
+                  <div class="menu-price">$1,299</div>
+                </div>
+                <div class="menu-item fade-in-element">
+                  <h3>ANTIQ Mini</h3>
+                  <p>Compact version with the same great sound.</p>
+                  <div class="menu-price">$599</div>
+                </div>
+                <div class="menu-item fade-in-element">
+                  <h3>ANTIQ Studio</h3>
+                  <p>Professional version for audio engineers.</p>
+                  <div class="menu-price">$1,899</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section align-left" id="about">
+        <div class="split-view">
+          <div class="content-half">
+            <h2 class="section-title fade-in-element">About Us</h2>
+            <div class="section-content">
+              <div class="about-content">
+                <p class="fade-in-element">
+                  The ANTIQ represents the culmination of years of research and
+                  development. Every component has been carefully selected and
+                  tuned to deliver an unparalleled listening experience,
+                  bringing clarity, depth, and richness to your favorite audio.
+                </p>
+                <p class="fade-in-element">
+                  We believe in creating products that not only sound
+                  extraordinary but also become a seamless part of your living
+                  space. Our passion for audio excellence drives us to
+                  continually push boundaries and redefine what's possible in
+                  sound.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section align-right" id="services">
+        <div class="split-view">
+          <div class="content-half">
+            <h2 class="section-title fade-in-element">Our Services</h2>
+            <div class="section-content">
+              <p class="fade-in-element">
+                Beyond our products, we offer a range of services to enhance
+                your audio experience and ensure you get the most out of your
+                ANTIQ.
+              </p>
+              <div class="services-list">
+                <div class="service-item fade-in-element">
+                  <h3>Custom Audio Tuning</h3>
+                  <p>
+                    Personalized sound profile creation tailored to your
+                    listening preferences and environment, ensuring optimal
+                    audio delivery in any space.
+                  </p>
+                </div>
+                <div class="service-item fade-in-element">
+                  <h3>Professional Installation</h3>
+                  <p>
+                    Expert setup and calibration for optimal performance in your
+                    space, including integration with existing home audio
+                    systems.
+                  </p>
+                </div>
+                <div class="service-item fade-in-element">
+                  <h3>Software Updates &amp; Support</h3>
+                  <p>
+                    Regular firmware updates to introduce new features and
+                    improvements, along with dedicated customer support for any
+                    queries or technical assistance.
+                  </p>
+                </div>
+                <div class="service-item fade-in-element">
+                  <h3>Extended Warranty Plans</h3>
+                  <p>
+                    Protect your investment with our extended warranty options,
+                    providing peace of mind and long-term coverage for your
+                    ANTIQ radio.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Combined Contact and Footer Section -->
+      <section class="content-section align-left" id="contact">
+        <div class="split-view">
+          <div class="content-half">
+            <h2 class="section-title fade-in-element">Contact Us</h2>
+            <div class="section-content">
+              <p class="fade-in-element">
+                Want to learn more about ANTIQ radio? Get in touch with our
+                team.
+              </p>
+              <form class="contact-form" id="contactForm">
+                <div class="form-group fade-in-element">
+                  <label for="name">Name</label>
+                  <input type="text" id="name" name="name" required />
+                </div>
+                <div class="form-group fade-in-element">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" name="email" required />
+                </div>
+                <div class="form-group fade-in-element">
+                  <label for="subject">Subject</label>
+                  <input type="text" id="subject" name="subject" />
+                </div>
+                <div class="form-group fade-in-element">
+                  <label for="message">Message</label>
+                  <textarea id="message" name="message" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn fade-in-element">
+                  SEND MESSAGE
+                </button>
+              </form>
+            </div>
+            <!-- Footer content moved here -->
+            <footer class="footer">
+              <p>© 2025 ANTIQ Radio. All rights reserved.</p>
+              <div class="footer-links">
+                <a href="#home" class="footer-link">Home</a>
+                <a href="#menu" class="footer-link">Products</a>
+                <a href="#about" class="footer-link">About</a>
+                <a href="#services" class="footer-link">Services</a>
+                <a href="#contact" class="footer-link">Contact</a>
+                <!-- Updated preorder link to redirect to index2.html with a parameter -->
+                <a href="index2.html" class="footer-link">Preorder</a>
+              </div>
+              <div class="social-icons">
+                <a href="#" class="social-icon"
+                  ><i class="fab fa-facebook-f"></i
+                ></a>
+                <a href="#" class="social-icon"
+                  ><i class="fab fa-twitter"></i
+                ></a>
+                <a href="#" class="social-icon"
+                  ><i class="fab fa-instagram"></i
+                ></a>
+                <a href="#" class="social-icon"
+                  ><i class="fab fa-linkedin-in"></i
+                ></a>
+              </div>
+            </footer>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="popup-overlay" id="popupOverlay">
+      <div class="popup">
+        <button class="close" onclick="hidePopup()">×</button>
+        <div id="popupContent"></div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollToPlugin.min.js"></script>
+
+    <script>
+      // Global variables for Three.js scene components
+      let scene, camera, renderer, model, waveMesh, sparkleParticles;
+      const modelContainer = document.getElementById("model-container");
+      const modelAngleDisplay = document.getElementById("model-angle-display"); // Get the display element
+
+      // Mouse position for interactive effects
+      const mouse = new THREE.Vector2();
+      const mouse3D = new THREE.Vector3(); // For projecting mouse to 3D space
+
+      // Define properties for the model when it's in the split-view (text on right, model on left)
+      const splitViewLeftModel = {
+        rotationX: -0.2, // Slight tilt down
+        positionX: -1.0, // Adjusted to be less extreme for better visibility
+        zoom: 5.0, // Increased zoom for full visibility
+      };
+
+      // Define properties for the model when it's in the split-view (text on left, model on right)
+      const splitViewRightModel = {
+        rotationX: 0.2, // Slight tilt up
+        positionX: 1.0, // Adjusted to be less extreme for better visibility
+        zoom: 5.0, // Increased zoom for full visibility
+      };
+
+      // Store section rotation, position, and zoom targets for the 3D model
+      const sectionModelProperties = {
+        home: {
+          rotationX: 0, // X rotation is now only user-controlled, this value is for reference
+          rotationY: 0, // Initial Y rotation for home section
+          positionX: 0,
+          positionY: -0.5, // Adjusted to lower the model for more space from header
+          zoom: 9.0, // Increased zoom to keep the model fully visible
+        },
+        menu: {
+          rotationX: -0.1, // X rotation is now only user-controlled, this value is for reference
+          rotationY: Math.PI * 0.6, // More pronounced rotation to show side
+          positionX: -1.8, // Increased negative value for more space
+          positionY: 0, // Vertically centered in its half
+          zoom: 5.0, // Zoomed in for detail
+        },
+        about: {
+          rotationX: 0.1, // X rotation is now only user-controlled, this value is for reference
+          rotationY: Math.PI * 1.2, // More pronounced rotation to show back
+          positionX: 1.8, // Increased positive value for more space
+          positionY: 0, // Vertically centered in its half
+          zoom: 5.0, // Zoomed in for detail
+        },
+        services: {
+          rotationX: -Math.PI * 0.2, // X rotation is now only user-controlled, this value is for reference
+          rotationY: Math.PI * 1.8, // More pronounced rotation to show other side
+          positionX: -1.8, // Increased negative value for more space
+          positionY: 0, // Vertically centered in its half
+          zoom: 4.5, // Slightly more zoomed for control details
+        },
+        contact: {
+          rotationX: Math.PI * 0.2, // X rotation is now only user-controlled, this value is for reference
+          rotationY: Math.PI * 2.4, // More pronounced rotation to complete full circle (back to front)
+          positionX: 1.8, // Increased positive value for more space
+          positionY: 0, // Vertically centered in its half
+          zoom: 4.5, // Slightly more zoomed for base details
+        },
+      };
+
+      // Store section colors for lighting
+      const sectionColors = {
+        home: 0xffffff,
+        menu: 0xffaa00,
+        about: 0x00aaff,
+        services: 0xaa00ff,
+        contact: 0x00ffaa,
+      };
+
+      // Product data for the preorder form
+      const products = [
+        { id: "classic", name: "ANTIQ Classic", price: "$899" },
+        { id: "pro", name: "ANTIQ Pro", price: "$1,299" },
+        { id: "mini", name: "ANTIQ Mini", price: "$599" },
+        { id: "studio", name: "ANTIQ Studio", price: "$1,899" },
+      ];
+
+      let currentSection = "home";
+      let targetRotationY = sectionModelProperties.home.rotationY; // Initialize target Y rotation
+      let targetPositionX = sectionModelProperties.home.positionX;
+      let targetPositionY = sectionModelProperties.home.positionY;
+      let targetZoom = sectionModelProperties.home.zoom;
+      let lastScrollY = window.scrollY;
+      let isDragging = false;
+      let previousMousePosition = { x: 0, y: 0 };
+      let directionalLight1, directionalLight2;
+      let navClickInProgress = false;
+      let modelVelocity = { x: 0, y: 0 };
+      let modelDamping = 0.95; // Damping factor for smooth deceleration
+      let lastTime = 0;
+
+      let modelUserRotationY = 0;
+      let modelUserRotationX = 0;
+      let modelContinuousRotationY = 0;
+      let modelScrollRotationY = 0;
+
+      /**
+       * Initializes the Three.js scene, camera, renderer, and lights.
+       * Appends the renderer's DOM element to the model-container.
+       */
+      function initThreeJs() {
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000000);
+
+        camera = new THREE.PerspectiveCamera(
+          45,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000
+        );
+        camera.position.set(0, 0, targetZoom);
+
+        renderer = new THREE.WebGLRenderer({
+          antialias: true,
+          powerPreference: "high-performance",
+        });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        modelContainer.appendChild(renderer.domElement);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(ambientLight);
+
+        directionalLight1 = new THREE.DirectionalLight(sectionColors.home, 0.8);
+        directionalLight1.position.set(1, 1, 1);
+        directionalLight1.castShadow = true;
+        directionalLight1.shadow.mapSize.width = 1024;
+        directionalLight1.shadow.mapSize.height = 1024;
+        scene.add(directionalLight1);
+
+        directionalLight2 = new THREE.DirectionalLight(sectionColors.home, 0.5);
+        directionalLight2.position.set(-1, 0.5, 1);
+        scene.add(directionalLight2);
+
+        // Add subtle ambient occlusion
+        const ambientOcclusion = new THREE.AmbientLight(0x000000, 0.2);
+        scene.add(ambientOcclusion);
+
+        createRadioModel();
+        createWaveEffect();
+        createSparkleEffect();
+
+        window.addEventListener("resize", onWindowResize);
+
+        // Add mouse events for interactive rotation and background effects
+        modelContainer.addEventListener("mousedown", onMouseDown);
+        modelContainer.addEventListener("mousemove", onMouseMove);
+        modelContainer.addEventListener("mouseup", onMouseUp);
+        modelContainer.addEventListener("mouseleave", onMouseUp);
+        modelContainer.addEventListener("dblclick", resetModelView);
+
+        // Add touch events for mobile
+        modelContainer.addEventListener("touchstart", onTouchStart, {
+          passive: false,
+        });
+        modelContainer.addEventListener("touchmove", onTouchMove, {
+          passive: false,
+        });
+        modelContainer.addEventListener("touchend", onTouchEnd);
+
+        // Start the animation loop
+        animate();
+      }
+
+      /**
+       * Handles window resize events to update camera aspect ratio and renderer size.
+       */
+      function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      /**
+       * Loads the 3D radio model using GLTFLoader.
+       * Adds the loaded model to the scene and sets its initial properties.
+       */
+      function createRadioModel() {
+        const loader = new THREE.GLTFLoader();
+        // Using a BoomBox GLB model from KhronosGroup's glTF-Sample-Assets
+        const modelUrl =
+          "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BoomBox/glTF-Binary/BoomBox.glb";
+        loader.load(
+          modelUrl,
+          function (gltf) {
+            model = gltf.scene;
+            model.scale.set(100, 100, 100); // Increased scale for better visibility
+            model.position.set(0, 0, 0); // Center the model, will be adjusted by targetPositionY
+            // Set initial rotation based on home section properties
+            model.rotation.set(0, sectionModelProperties.home.rotationY, 0);
+            scene.add(model);
+          },
+          undefined,
+          function (error) {
+            console.error("An error occurred while loading the model:", error);
+            // Fallback: create a simple cube if model fails to load
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const material = new THREE.MeshPhongMaterial({ color: 0xcccccc });
+            model = new THREE.Mesh(geometry, material);
+            model.position.set(0, 0, 0);
+            scene.add(model); // Add the fallback cube to the scene
+            console.warn(
+              "Using a fallback cube model due to GLTF loading error."
+            );
+          }
+        );
+      }
+
+      /**
+       * Creates a 3D plane and animates its vertices to simulate a wave effect.
+       */
+      function createWaveEffect() {
+        const waveGeometry = new THREE.PlaneGeometry(30, 30, 100, 100);
+        const waveMaterial = new THREE.MeshStandardMaterial({
+          color: 0x0a0a0a,
+          metalness: 0.9,
+          roughness: 0.2,
+          transparent: true,
+          opacity: 0.7,
+          side: THREE.DoubleSide,
+        });
+        waveMesh = new THREE.Mesh(waveGeometry, waveMaterial);
+        waveMesh.rotation.x = -Math.PI / 2;
+        waveMesh.position.y = -1.5;
+        scene.add(waveMesh);
+
+        waveMesh.geometry.attributes.position.original = Array.from(
+          waveMesh.geometry.attributes.position.array
+        );
+      }
+
+      /**
+       * Creates a particle system for a subtle sparkle effect.
+       */
+      function createSparkleEffect() {
+        const particleCount = 20000;
+        const positions = new Float32Array(particleCount * 3);
+        const sizes = new Float32Array(particleCount);
+
+        for (let i = 0; i < particleCount; i++) {
+          positions[i * 3 + 0] = (Math.random() - 0.5) * 80;
+          positions[i * 3 + 1] = (Math.random() - 0.5) * 80;
+          positions[i * 3 + 2] = (Math.random() - 0.5) * 80;
+          sizes[i] = Math.random() * 0.6 + 0.1;
+        }
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(positions, 3)
+        );
+        geometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
+
+        const material = new THREE.PointsMaterial({
+          color: 0xffffff,
+          size: 0.1,
+          sizeAttenuation: true,
+          transparent: true,
+          opacity: 0.8,
+          blending: THREE.AdditiveBlending,
+        });
+
+        sparkleParticles = new THREE.Points(geometry, material);
+        scene.add(sparkleParticles);
+      }
+
+      /**
+       * The main animation loop for the Three.js scene.
+       */
+      function animate(time) {
+        requestAnimationFrame(animate);
+
+        const deltaTime = (time - lastTime) / 1000 || 0;
+        lastTime = time;
+
+        // Ensure model exists before manipulating its properties
+        if (model) {
+          modelVelocity.x *= modelDamping;
+          modelVelocity.y *= modelDamping;
+
+          if (
+            isDragging ||
+            Math.abs(modelVelocity.x) > 0.0001 ||
+            Math.abs(modelVelocity.y) > 0.0001
+          ) {
+            modelUserRotationY += modelVelocity.x * deltaTime * 10;
+            modelUserRotationX += modelVelocity.y * deltaTime * 10;
+          }
+
+          if (!isDragging) {
+            modelUserRotationY = THREE.MathUtils.lerp(
+              modelUserRotationY,
+              0,
+              0.05
+            );
+            modelUserRotationX = THREE.MathUtils.lerp(
+              modelUserRotationX,
+              0,
+              0.05
+            );
+          }
+
+          modelContinuousRotationY += 0.001;
+
+          // Lerp model's X and Y positions towards their targets
+          model.position.x = THREE.MathUtils.lerp(
+            model.position.x,
+            targetPositionX,
+            0.05
+          );
+          model.position.y = THREE.MathUtils.lerp(
+            model.position.y,
+            targetPositionY,
+            0.05
+          );
+
+          // Calculate the combined target Y rotation (section-based + continuous + user + scroll)
+          const combinedTargetYRotation =
+            targetRotationY +
+            modelContinuousRotationY +
+            modelUserRotationY +
+            modelScrollRotationY;
+
+          // Lerp the model's Y rotation towards the combined target
+          model.rotation.y = THREE.MathUtils.lerp(
+            model.rotation.y,
+            combinedTargetYRotation,
+            0.05
+          );
+
+          // Model's X rotation is only affected by user interaction
+          model.rotation.x = modelUserRotationX;
+
+          // Update model angle display - ONLY show Rotation X and Y in the specified format
+          if (modelAngleDisplay) {
+            // Convert radians to degrees for display
+            const rotationYDegrees = (
+              (model.rotation.y * 180) /
+              Math.PI
+            ).toFixed(1);
+            const rotationXDegrees = (
+              (model.rotation.x * 180) /
+              Math.PI
+            ).toFixed(1);
+            modelAngleDisplay.innerHTML = `Y: ${rotationYDegrees}° | X: ${rotationXDegrees}°`;
+          }
+        }
+
+        camera.position.z = THREE.MathUtils.lerp(
+          camera.position.z,
+          targetZoom,
+          0.05
+        );
+
+        if (waveMesh) {
+          const positions = waveMesh.geometry.attributes.position.array;
+          const originalPositions =
+            waveMesh.geometry.attributes.position.original;
+
+          for (let i = 0; i < positions.length; i += 3) {
+            const x = originalPositions[i];
+            const y = originalPositions[i + 1];
+            const z = originalPositions[i + 2];
+
+            positions[i + 1] =
+              y +
+              Math.sin(x * 0.5 + time * 0.001) * 0.2 +
+              Math.cos(z * 0.5 + time * 0.001) * 0.2;
+
+            const distance = mouse3D.distanceTo(
+              new THREE.Vector3(x, positions[i + 1], z)
+            );
+            const influenceRadius = 7;
+            if (distance < influenceRadius) {
+              const strength = (1 - distance / influenceRadius) * 0.8;
+              positions[i + 1] += Math.sin(time * 0.008) * strength;
+            }
+          }
+          waveMesh.geometry.attributes.position.needsUpdate = true;
+        }
+
+        if (sparkleParticles) {
+          const positions = sparkleParticles.geometry.attributes.position.array;
+          const sizes = sparkleParticles.geometry.attributes.size.array;
+          for (let i = 0; i < positions.length; i += 3) {
+            sizes[i / 3] = Math.sin(time * 0.002 + i) * 0.1 + 0.2;
+
+            const particlePos = new THREE.Vector3(
+              positions[i],
+              positions[i + 1],
+              positions[i + 2]
+            );
+            const distance = mouse3D.distanceTo(particlePos);
+            const repulsionRadius = 5;
+            if (distance < repulsionRadius) {
+              const repulsionStrength = (1 - distance / repulsionRadius) * 0.1;
+              const direction = particlePos.clone().sub(mouse3D).normalize();
+              positions[i] += direction.x * repulsionStrength;
+              positions[i + 1] += direction.y * repulsionStrength;
+              positions[i + 2] += direction.z * repulsionStrength;
+            }
+          }
+          sparkleParticles.geometry.attributes.position.needsUpdate = true;
+          sparkleParticles.geometry.attributes.size.needsUpdate = true;
+          sparkleParticles.rotation.y += 0.0005;
+          sparkleParticles.rotation.x += 0.0002;
+        }
+
+        updateLightColor();
+        renderer.render(scene, camera);
+      }
+
+      /**
+       * Updates the model's position, rotation, and camera zoom based on the current section.
+       */
+      function updateModelView() {
+        const props = sectionModelProperties[currentSection];
+        if (props) {
+          targetRotationY = props.rotationY; // Update target Y rotation based on section
+          targetPositionX = props.positionX;
+          targetPositionY = props.positionY || 0;
+          targetZoom = props.zoom;
+        }
+      }
+
+      /**
+       * Smoothly transitions the directional light colors based on the current section.
+       */
+      function updateLightColor() {
+        const targetColor = new THREE.Color(sectionColors[currentSection]);
+        if (directionalLight1 && directionalLight2) {
+          directionalLight1.color.lerp(targetColor, 0.05);
+          directionalLight2.color.lerp(targetColor, 0.05);
+        }
+      }
+
+      /**
+       * Handles mouse down event for interactive model rotation.
+       */
+      function onMouseDown(event) {
+        isDragging = true;
+        previousMousePosition = {
+          x: event.clientX,
+          y: event.clientY,
+        };
+        modelVelocity = { x: 0, y: 0 };
+        modelContainer.style.cursor = "grabbing";
+      }
+
+      /**
+       * Handles mouse move event for interactive model rotation and background effects.
+       */
+      function onMouseMove(event) {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        mouse3D.x = mouse.x * (camera.position.z * 0.5);
+        mouse3D.y = mouse.y * (camera.position.z * 0.5);
+        mouse3D.z = 0;
+
+        if (!isDragging || !model) return;
+
+        const deltaMove = {
+          x: event.clientX - previousMousePosition.x,
+          y: event.clientY - previousMousePosition.y,
+        };
+
+        modelVelocity.x = deltaMove.x * 0.005;
+        modelVelocity.y = deltaMove.y * 0.005;
+
+        previousMousePosition = {
+          x: event.clientX,
+          y: event.clientY,
+        };
+      }
+
+      /**
+       * Handles mouse up event to stop dragging.
+       */
+      function onMouseUp() {
+        isDragging = false;
+        modelContainer.style.cursor = "grab";
+      }
+
+      /**
+       * Handles touch start event for interactive model rotation.
+       */
+      function onTouchStart(event) {
+        if (event.touches.length === 1) {
+          isDragging = true;
+          previousMousePosition = {
+            x: event.touches[0].clientX,
+            y: event.touches[0].clientY,
+          };
+          modelVelocity = { x: 0, y: 0 };
+          modelContainer.style.cursor = "grabbing";
+        }
+      }
+
+      /**
+       * Handles touch move event for interactive model rotation.
+       */
+      function onTouchMove(event) {
+        if (!isDragging || !model || event.touches.length !== 1) return;
+        event.preventDefault();
+
+        mouse.x = (event.touches[0].clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.touches[0].clientY / window.innerHeight) * 2 + 1;
+
+        mouse3D.x = mouse.x * (camera.position.z * 0.5);
+        mouse3D.y = mouse.y * (camera.position.z * 0.5);
+        mouse3D.z = 0;
+
+        const deltaMove = {
+          x: event.touches[0].clientX - previousMousePosition.x,
+          y: event.touches[0].clientY - previousMousePosition.y,
+        };
+
+        modelVelocity.x = deltaMove.x * 0.005;
+        modelVelocity.y = deltaMove.y * 0.005;
+
+        previousMousePosition = {
+          x: event.touches[0].clientX,
+          y: event.touches[0].clientY,
+        };
+      }
+
+      /**
+       * Handles touch end event to stop dragging.
+       */
+      function onTouchEnd() {
+        isDragging = false;
+        modelContainer.style.cursor = "grab";
+      }
+
+      /**
+       * Resets the model view to the current section's default properties.
+       */
+      function resetModelView() {
+        if (model) {
+          const props = sectionModelProperties[currentSection];
+          if (props) {
+            gsap.to(modelUserRotationY, {
+              value: 0,
+              duration: 0.5,
+              ease: "power2.out",
+            });
+            gsap.to(modelUserRotationX, {
+              value: 0,
+              duration: 0.5,
+              ease: "power2.out",
+            });
+            // Reset model's Y rotation to the section's base Y rotation
+            gsap.to(model.rotation, {
+              y: props.rotationY, // Reset to section's default Y rotation
+              duration: 0.8,
+              ease: "power2.out",
+            });
+            gsap.to(model.position, {
+              x: props.positionX,
+              y: props.positionY,
+              duration: 0.8,
+              ease: "power2.out",
+            });
+            gsap.to(camera.position, {
+              z: props.zoom,
+              duration: 0.8,
+              ease: "power2.out",
+            });
+          }
+        }
+      }
+
+      /**
+       * Handles scroll events to update navigation bar style and 3D model view.
+       */
+      function handleScroll() {
+        const mainNav = document.querySelector(".main-nav");
+        if (window.scrollY > 50) {
+          mainNav.classList.add("scrolled");
+          document.body.classList.add("scrollbar-visible");
+        } else {
+          mainNav.classList.remove("scrolled");
+          document.body.classList.remove("scrollbar-visible");
+        }
+
+        const sections = document.querySelectorAll(".content-section");
+        let newSection = "home";
+        sections.forEach((section) => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= window.innerHeight * 0.5 && rect.bottom >= 0) {
+            newSection = section.id;
+          }
+        });
+
+        if (newSection !== currentSection && !navClickInProgress) {
+          currentSection = newSection;
+          updateModelView();
+          document.querySelectorAll(".nav-link").forEach((link) => {
+            link.classList.remove("active");
+            if (link.getAttribute("href") === `#${currentSection}`) {
+              link.classList.add("active");
+            }
+          });
+          // Update active class for mobile menu links as well
+          document
+            .querySelectorAll(".mobile-menu-overlay .nav-link")
+            .forEach((link) => {
+              link.classList.remove("active");
+              if (link.dataset.section === currentSection) {
+                link.classList.add("active");
+              }
+            });
+        }
+      }
+
+      /**
+       * Shows a generic popup with specified content.
+       */
+      function showPopup(type) {
+        const popupOverlay = document.getElementById("popupOverlay");
+        const popupContent = document.getElementById("popupContent");
+
+        let content = "";
+        if (type === "preorder") {
+          // Dynamically generate product options
+          let productOptions = products
+            .map(
+              (product) =>
+                `<option value="${product.id}">${product.name} - ${product.price}</option>`
+            )
+            .join("");
+
+          content = `
+            <h2>Preorder ANTIQ Radio</h2>
+            <p>Be among the first to experience the ANTIQ radio. Fill out the form below to reserve yours.</p>
+            <form id="preorderFormPopup" class="preorder-form-popup">
+              <div class="form-group">
+                <label for="preorderName">Name</label>
+                <input type="text" id="preorderName" name="name" required />
+              </div>
+              <div class="form-group">
+                <label for="preorderEmail">Email</label>
+                <input type="email" id="preorderEmail" name="email" required />
+              </div>
+              <div class="form-group">
+                <label for="preorderProduct">Select Product</label>
+                <select id="preorderProduct" name="product" required>
+                  <option value="">--Please choose an option--</option>
+                  ${productOptions}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="preorderQuantity">Quantity</label>
+                <input type="number" id="preorderQuantity" name="quantity" value="1" min="1" required />
+              </div>
+              <button type="submit" class="submit-btn">SUBMIT PREORDER</button>
+            </form>
+          `;
+        } else if (type === "contactFormSuccess") {
+          content = `
+            <h2>Message Sent!</h2>
+            <p>Thank you for contacting us. We will get back to you shortly.</p>
+            <button class="submit-btn" onclick="hidePopup()">Close</button>
+          `;
+        } else if (type === "preorderSuccess") {
+          content = `
+            <h2>Preorder Confirmed!</h2>
+            <p>Thank you for your preorder. We'll notify you when ANTIQ radio is ready for shipment.</p>
+            <button class="submit-btn" onclick="hidePopup()">Close</button>
+          `;
+        } else if (type === "error") {
+          content = `
+                <h2>Error!</h2>
+                <p id="errorMessage"></p>
+                <button class="submit-btn" onclick="hidePopup()">Close</button>
+            `;
+        }
+
+        popupContent.innerHTML = content;
+        popupOverlay.style.display = "flex";
+
+        if (type === "preorder") {
+          const preorderForm = document.getElementById("preorderFormPopup");
+          if (preorderForm) {
+            preorderForm.addEventListener("submit", async function (event) {
+              event.preventDefault();
+              const formData = new FormData(this);
+              const data = Object.fromEntries(formData.entries());
+
+              // Simulate API call success/failure
+              // In a real application, you would send this data to your backend:
+              // const response = await fetch("/api/preorder", { ... });
+              // const result = await response.json();
+
+              // For now, simulate success after a short delay
+              setTimeout(() => {
+                const success = true; // Change to false to simulate an error
+                if (success) {
+                  showPopup("preorderSuccess");
+                  this.reset();
+                } else {
+                  showPopup("error");
+                  document.getElementById("errorMessage").textContent =
+                    "Simulated: Failed to submit preorder. (Backend needed)";
+                }
+              }, 1000); // Simulate network delay
+            });
+          }
+        }
+      }
+
+      /**
+       * Hides the currently active popup.
+       */
+      function hidePopup() {
+        const popupOverlay = document.getElementById("popupOverlay");
+        popupOverlay.style.display = "none";
+      }
+
+      /**
+       * Initializes GSAP ScrollTrigger animations for elements with 'fade-in-element' class.
+       */
+      function initScrollAnimations() {
+        gsap.utils.toArray(".fade-in-element").forEach((element) => {
+          gsap.fromTo(
+            element,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: element,
+                start: "top 85%",
+                toggleActions: "play none none none",
+              },
+            }
+          );
+        });
+
+        // Only apply scroll trigger to model if it exists
+        if (model) {
+          gsap.to(model, {
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".content-sections",
+              start: "top top",
+              end: "bottom bottom",
+              scrub: 1,
+              onUpdate: (self) => {
+                modelScrollRotationY = self.progress * (Math.PI * 2);
+              },
+            },
+          });
+        }
+      }
+
+      /**
+       * Initializes specific text animations for the home section headings.
+       */
+      function initTextAnimations() {
+        const headline = document.getElementById("ion-headline");
+        if (headline) {
+          headline.addEventListener("mouseenter", () => {
+            gsap.to(headline, {
+              y: -5,
+              color: "#aaa",
+              duration: 0.3,
+              ease: "power1.out",
+            });
+          });
+          headline.addEventListener("mouseleave", () => {
+            gsap.to(headline, {
+              y: 0,
+              color: "white",
+              duration: 0.3,
+              ease: "power1.out",
+            });
+          });
+        }
+      }
+
+      /**
+       * Handles navigation link clicks, smoothly scrolls to the section,
+       * and updates the active navigation link.
+       */
+      function handleNavClick(event) {
+        // Only prevent default for internal links (those starting with #)
+        if (event.target.getAttribute("href").startsWith("#")) {
+          event.preventDefault();
+          const targetId = event.target.getAttribute("href").substring(1);
+          const targetElement = document.getElementById(targetId);
+
+          if (targetElement) {
+            navClickInProgress = true;
+            gsap.to(window, {
+              duration: 1.5,
+              scrollTo: { y: targetElement, offsetY: 0 },
+              ease: "power3.inOut",
+              onComplete: () => {
+                navClickInProgress = false;
+                currentSection = targetId;
+                updateModelView();
+              },
+            });
+
+            // Update active class for desktop nav links
+            document.querySelectorAll(".main-nav .nav-link").forEach((link) => {
+              link.classList.remove("active");
+              if (link.getAttribute("href") === `#${currentSection}`) {
+                link.classList.add("active");
+              }
+            });
+            // Update active class for mobile menu links as well
+            document
+              .querySelectorAll(".mobile-menu-overlay .nav-link")
+              .forEach((link) => {
+                link.classList.remove("active");
+                if (link.dataset.section === currentSection) {
+                  link.classList.add("active");
+                }
+              });
+
+            // Close mobile menu if open
+            const mobileMenuOverlay =
+              document.getElementById("mobileMenuOverlay");
+            if (mobileMenuOverlay.classList.contains("active")) {
+              mobileMenuOverlay.classList.remove("active");
+            }
+          }
+        }
+      }
+
+      // Event listener for DOM content loaded
+      document.addEventListener("DOMContentLoaded", () => {
+        const introElement = document.querySelector(".intro");
+        const introText = introElement.querySelector(".intro-text");
+        const ionMain = document.querySelector(".ion-main");
+        const ionContainer = document.querySelector(".ion-container");
+        const antiqLetters = document.querySelectorAll(".antiq-letter");
+        const ionHeadline = document.getElementById("ion-headline");
+
+        gsap.set(introText, { opacity: 0, scale: 0.5 });
+        gsap.set(ionMain, { opacity: 0 });
+        gsap.set(ionContainer, { scale: 1.5, opacity: 0 });
+        gsap.set(antiqLetters, { opacity: 0, rotationX: 90, y: 20 });
+        gsap.set(ionHeadline, { opacity: 0, y: 20 });
+
+        const masterTimeline = gsap.timeline({
+          defaults: { ease: "power2.out" },
+        });
+
+        masterTimeline
+          .to(introText, {
+            opacity: 1,
+            scale: 1.2,
+            duration: 0.8,
+            delay: 0.5,
+          })
+          .to(introText, {
+            opacity: 0,
+            scale: 5,
+            duration: 0.6,
+            ease: "power1.in",
+            onComplete: () => {
+              introElement.style.display = "none";
+            },
+          })
+          .to(ionMain, { opacity: 1, duration: 1.5 }, "<0.2")
+          .to(
+            ionContainer,
+            {
+              scale: 1,
+              opacity: 1,
+              duration: 2.0,
+              ease: "power3.out",
+            },
+            "<"
+          )
+          .to(
+            antiqLetters,
+            {
+              opacity: 1,
+              rotationX: 0,
+              y: 0,
+              duration: 0.8,
+              ease: "power3.out",
+              stagger: 0.1,
+            },
+            "<0.5"
+          )
+          .to(ionHeadline, { opacity: 0.85, y: 0, duration: 0.8 }, "<0.2");
+
+        // Attach handleNavClick only to internal navigation links (those starting with #)
+        document
+          .querySelectorAll(".main-nav .nav-links .nav-link[href^='#']")
+          .forEach((link) => {
+            link.addEventListener("click", handleNavClick);
+          });
+
+        // Mobile menu toggle logic
+        const hamburgerMenu = document.getElementById("hamburgerMenu");
+        const mobileMenuOverlay = document.getElementById("mobileMenuOverlay");
+        const mobileMenuClose = document.getElementById("mobileMenuClose");
+
+        if (hamburgerMenu) {
+          hamburgerMenu.addEventListener("click", () => {
+            mobileMenuOverlay.classList.add("active");
+          });
+        }
+
+        if (mobileMenuClose) {
+          mobileMenuClose.addEventListener("click", () => {
+            mobileMenuOverlay.classList.remove("active");
+          });
+        }
+
+        // Close mobile menu when an internal link inside it is clicked
+        document
+          .querySelectorAll(
+            ".mobile-menu-overlay .nav-links .nav-link[href^='#']"
+          )
+          .forEach((link) => {
+            link.addEventListener("click", handleNavClick); // Re-use handleNavClick
+          });
+
+        const contactForm = document.getElementById("contactForm");
+        if (contactForm) {
+          contactForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            // Simulate API call success/failure
+            // In a real application, you would send this data to your backend:
+            // const response = await fetch("/api/contact", { ... });
+            // const result = await response.json();
+
+            // For now, simulate success after a short delay
+            setTimeout(() => {
+              const success = true; // Change to false to simulate an error
+              if (success) {
+                showPopup("contactFormSuccess");
+                this.reset();
+              } else {
+                showPopup("error");
+                document.getElementById("errorMessage").textContent =
+                  "Simulated: Failed to send message. (Backend needed)";
+              }
+            }, 1000); // Simulate network delay
+          });
+        }
+
+        handleScroll();
+        window.addEventListener("scroll", handleScroll);
+
+        initScrollAnimations();
+        initTextAnimations();
+
+        // Removed the logic to open preorder form on load via URL parameter
+        // as the preorder button now directly links to index2.html
+      });
+
+      window.onload = function () {
+        initThreeJs();
+      };
+    </script>
+  </body>
+</html>
