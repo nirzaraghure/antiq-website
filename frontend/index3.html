@@ -2294,8 +2294,9 @@
             const data = Object.fromEntries(formData.entries());
 
             try {
+              // *** IMPORTANT CHANGE HERE: Update the URL to your live backend URL ***
               const response = await fetch(
-                "http://localhost:5501/api/contact",
+                "https://antiq-website.onrender.com/api/contact", // Changed from localhost to your live backend URL
                 {
                   method: "POST",
                   headers: {
