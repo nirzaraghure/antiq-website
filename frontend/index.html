@@ -1123,6 +1123,7 @@
         <a href="#home" class="nav-link active">HOME</a>
         <a href="#menu" class="nav-link">PRODUCTS</a>
         <a href="#about" class="nav-link">ABOUT</a>
+        <a href="#features" class="nav-link">FEATURES</a>
         <a href="#services" class="nav-link">SERVICES</a>
         <a href="#contact" class="nav-link">CONTACT</a>
         <!-- Changed to nav-link class -->
@@ -1137,12 +1138,17 @@
         <a href="#home" class="nav-link active" data-section="home">HOME</a>
         <a href="#menu" class="nav-link" data-section="menu">PRODUCTS</a>
         <a href="#about" class="nav-link" data-section="about">ABOUT</a>
+        <a href="#features" class="nav-link" data-section="features"
+          >FEATURES</a
+        >
         <a href="#services" class="nav-link" data-section="services"
           >SERVICES</a
         >
         <a href="#contact" class="nav-link" data-section="contact">CONTACT</a>
-        <!-- Changed to nav-link class -->
-        <a href="index2.html" class="nav-link nav-preorder-button">PREORDER</a>
+        <!-- Ensure the mobile preorder button also has the nav-preorder-button class for styling -->
+        <a href="index2.html" class="nav-link nav-preorder-button"
+          >PREORDER</a
+        >
       </div>
     </div>
 
@@ -1307,6 +1313,7 @@
                     improvements, along with dedicated customer support for any
                     queries or technical assistance.
                   </p>
+                </div>
                 <div class="service-item fade-in-element">
                   <h3>Extended Warranty Plans</h3>
                   <p>
@@ -1446,7 +1453,8 @@
           positionY: 0, // Vertically centered in its half
           zoom: 5.0, // Zoomed in for detail
         },
-        features: { // Added features section for model properties
+        features: {
+          // Added features section for model properties
           rotationX: 0,
           rotationY: Math.PI * 0.3,
           positionX: -1.0,
@@ -1526,7 +1534,6 @@
         } else {
           camera.position.set(0, 0, targetZoom);
         }
-
 
         renderer = new THREE.WebGLRenderer({
           antialias: true,
@@ -1785,7 +1792,6 @@
           );
         }
 
-
         if (waveMesh) {
           const positions = waveMesh.geometry.attributes.position.array;
           const originalPositions =
@@ -2030,7 +2036,10 @@
           const rect = section.getBoundingClientRect();
           // Adjust threshold to consider a section "active" when its top is within a certain range
           // This helps with smoother transitions and ensures the model updates correctly.
-          if (rect.top <= window.innerHeight * 0.7 && rect.bottom >= window.innerHeight * 0.3) {
+          if (
+            rect.top <= window.innerHeight * 0.7 &&
+            rect.bottom >= window.innerHeight * 0.3
+          ) {
             newSection = section.id;
           }
         });
@@ -2249,12 +2258,14 @@
             });
 
             // Update active class for desktop nav links
-            document.querySelectorAll(".main-nav .nav-links .nav-link").forEach((link) => {
-              link.classList.remove("active");
-              if (link.getAttribute("href") === `#${currentSection}`) {
-                link.classList.add("active");
-              }
-            });
+            document
+              .querySelectorAll(".main-nav .nav-links .nav-link")
+              .forEach((link) => {
+                link.classList.remove("active");
+                if (link.getAttribute("href") === `#${currentSection}`) {
+                  link.classList.add("active");
+                }
+              });
             // Update active class for mobile menu links as well
             document
               .querySelectorAll(".mobile-menu-overlay .nav-link")
