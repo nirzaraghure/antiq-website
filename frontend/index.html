@@ -4,6 +4,16 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ANTIQ Radio Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome for social media icons and hamburger menu -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
     <style>
       /* Custom scrollbar styles */
       ::-webkit-scrollbar {
@@ -1081,15 +1091,6 @@
         }
       }
     </style>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Font Awesome for social media icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
   </head>
   <body>
     <nav class="main-nav">
@@ -1122,6 +1123,7 @@
         <a href="#home" class="nav-link active" data-section="home">HOME</a>
         <a href="#menu" class="nav-link" data-section="menu">PRODUCTS</a>
         <a href="#about" class="nav-link" data-section="about">ABOUT</a>
+        <a href="#features" class="nav-link" data-section="features">FEATURES</a>
         <a href="#services" class="nav-link" data-section="services"
           >SERVICES</a
         >
@@ -1227,7 +1229,38 @@
         </div>
       </section>
 
-      <section class="content-section align-right" id="services">
+      <section class="content-section align-right" id="features">
+        <div class="split-view">
+          <div class="content-half">
+            <h2 class="section-title fade-in-element">Key Features</h2>
+            <div class="section-content">
+              <p class="fade-in-element">
+                Discover what makes ANTIQ the ultimate music experience.
+              </p>
+              <div class="feature-highlights">
+                <div class="feature-card fade-in-element">
+                  <h3>Hi-Res Audio</h3>
+                  <p>Experience crystal-clear sound with 24-bit audio fidelity.</p>
+                </div>
+                <div class="feature-card fade-in-element">
+                  <h3>Long Battery Life</h3>
+                  <p>Enjoy up to 30 hours of continuous playback on a single charge.</p>
+                </div>
+                <div class="feature-card fade-in-element">
+                  <h3>AI-Powered</h3>
+                  <p>Smart algorithms adapt to your listening habits for personalized recommendations.</p>
+                </div>
+                <div class="feature-card fade-in-element">
+                  <h3>Vintage Aesthetics</h3>
+                  <p>A timeless design that complements any interior.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section align-left" id="services">
         <div class="split-view">
           <div class="content-half">
             <h2 class="section-title fade-in-element">Our Services</h2>
@@ -1277,7 +1310,7 @@
       </section>
 
       <!-- Combined Contact and Footer Section -->
-      <section class="content-section align-left" id="contact">
+      <section class="content-section align-right" id="contact">
         <div class="split-view">
           <div class="content-half">
             <h2 class="section-title fade-in-element">Contact Us</h2>
@@ -1315,6 +1348,7 @@
                 <a href="#home" class="footer-link">Home</a>
                 <a href="#menu" class="footer-link">Products</a>
                 <a href="#about" class="footer-link">About</a>
+                <a href="#features" class="footer-link">Features</a>
                 <a href="#services" class="footer-link">Services</a>
                 <a href="#contact" class="footer-link">Contact</a>
                 <!-- Updated preorder link to redirect to index2.html with a parameter -->
@@ -1400,6 +1434,13 @@
           positionY: 0, // Vertically centered in its half
           zoom: 5.0, // Zoomed in for detail
         },
+        features: { // Added features section for model properties
+          rotationX: 0,
+          rotationY: Math.PI * 0.3,
+          positionX: -1.0,
+          positionY: 0,
+          zoom: 6.0,
+        },
         services: {
           rotationX: -Math.PI * 0.2, // X rotation is now only user-controlled, this value is for reference
           rotationY: Math.PI * 1.8, // More pronounced rotation to show other side
@@ -1421,6 +1462,7 @@
         home: 0xffffff,
         menu: 0xffaa00,
         about: 0x00aaff,
+        features: 0xff00ff, // Color for features section
         services: 0xaa00ff,
         contact: 0x00ffaa,
       };
@@ -1948,7 +1990,9 @@
         let newSection = "home";
         sections.forEach((section) => {
           const rect = section.getBoundingClientRect();
-          if (rect.top <= window.innerHeight * 0.5 && rect.bottom >= 0) {
+          // Adjust threshold to consider a section "active" when its top is within a certain range
+          // This helps with smoother transitions and ensures the model updates correctly.
+          if (rect.top <= window.innerHeight * 0.7 && rect.bottom >= window.innerHeight * 0.3) {
             newSection = section.id;
           }
         });
@@ -2167,7 +2211,7 @@
             });
 
             // Update active class for desktop nav links
-            document.querySelectorAll(".main-nav .nav-link").forEach((link) => {
+            document.querySelectorAll(".main-nav .nav-links .nav-link").forEach((link) => {
               link.classList.remove("active");
               if (link.getAttribute("href") === `#${currentSection}`) {
                 link.classList.add("active");
