@@ -18,6 +18,7 @@
         padding: 0;
         overflow-x: hidden; /* Prevent horizontal scrolling */
         background-color: rgb(11, 11, 11);
+        padding-top: 6rem; /* Added padding to prevent fixed header overlap */
       }
       /* Custom gradient background for the overall page */
       .gradient-bg-full {
@@ -448,6 +449,9 @@
 
       /* Mobile Specific Styles */
       @media (max-width: 768px) {
+        body {
+            padding-top: 5rem; /* Slightly less padding for smaller mobile header */
+        }
         .main-nav {
           padding: 1rem; /* Smaller padding on mobile */
         }
@@ -483,6 +487,10 @@
           align-items: center; /* Center buttons on mobile */
         }
 
+        .cta-buttons-container { /* Targeted class for CTA buttons */
+            margin-bottom: 2rem; /* Reduced margin for mobile */
+        }
+
         .hero-content .sm:flex-row {
           flex-direction: column; /* Stack buttons vertically on mobile */
           gap: 1rem; /* Space between stacked buttons */
@@ -496,7 +504,9 @@
         .player-box-custom {
           width: 95%; /* Make player box slightly smaller on mobile */
           padding: 1.5rem; /* Adjust padding */
-          height: 240px; /* Adjust height for mobile */
+          height: auto; /* Allow height to adjust to content */
+          min-height: 240px; /* Maintain a minimum height */
+          margin-top: 2rem; /* Add some space from the content above it */
         }
 
         .player-control-circle {
@@ -644,7 +654,7 @@
     </div>
 
     <!-- Main Content Area -->
-    <div class="flex flex-col lg:flex-row w-full pt-20 lg:pt-0">
+    <div class="flex flex-col lg:flex-row w-full">
       <!-- Left Section: Dark background with content -->
       <div
         class="lg:w-[55%] p-6 md:p-12 lg:p-20 flex flex-col justify-between relative z-10"
@@ -667,7 +677,7 @@
 
           <!-- Call to Action Buttons -->
           <div
-            class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-20 w-full sm:w-auto"
+            class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-20 w-full sm:w-auto cta-buttons-container"
           >
             <!-- Updated Pre-order Now button to open form directly on this page -->
             <button
