@@ -454,6 +454,151 @@
         font-size: 0.95rem;
         cursor: pointer;
       }
+
+      /* Responsive adjustments for index2.html */
+      @media (max-width: 768px) {
+        .main-nav .nav-links {
+          display: none; /* Hide desktop nav links on mobile */
+        }
+
+        .main-nav .hamburger-menu {
+          display: block; /* Show hamburger menu */
+        }
+
+        .mobile-menu-overlay {
+          display: none; /* Hidden by default */
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(11, 10, 10, 0.95);
+          backdrop-filter: blur(15px);
+          z-index: 99;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transform: translateX(100%);
+          transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+          display: flex;
+          opacity: 1;
+          transform: translateX(0);
+        }
+
+        .mobile-menu-overlay .nav-links {
+          display: flex; /* Show links in mobile menu */
+          flex-direction: column;
+          gap: 2rem;
+          margin-right: 0;
+        }
+
+        .mobile-menu-overlay .nav-link {
+          font-size: 1.5rem;
+          padding: 0.8rem 0;
+        }
+
+        .mobile-menu-close {
+          position: absolute;
+          top: 1.5rem;
+          right: 2rem;
+          font-size: 2rem;
+          color: white;
+          cursor: pointer;
+          background: none;
+          border: none;
+        }
+
+        .flex-col-reverse-mobile {
+          flex-direction: column-reverse; /* Reverse order on mobile */
+        }
+
+        .lg\:w-\[55\%\] {
+          width: 100%; /* Full width for content on mobile */
+          padding: 1.5rem;
+        }
+
+        .lg\:w-\[45\%\] {
+          width: 100%; /* Full width for player on mobile */
+          padding: 1.5rem;
+        }
+
+        .text-5xl {
+          font-size: 3rem; /* Smaller hero heading on mobile */
+        }
+
+        .text-lg {
+          font-size: 1rem; /* Smaller paragraph text on mobile */
+        }
+
+        .flex-col-sm\:flex-row {
+          flex-direction: column; /* Stack buttons on mobile */
+        }
+
+        .sm\:space-y-0 {
+          space-y: 1rem; /* Add vertical space between stacked buttons */
+        }
+
+        .sm\:space-x-4 {
+          space-x: 0; /* Remove horizontal space between stacked buttons */
+        }
+
+        .sm\:w-auto {
+          width: 100%; /* Full width for buttons on mobile */
+        }
+
+        .player-box-custom {
+          width: 90%; /* Adjust player box width for mobile */
+          max-width: 400px; /* Max width for player box */
+          height: 250px; /* Adjust height for mobile */
+          padding: 1.5rem;
+        }
+
+        .text-3xl {
+          font-size: 2rem; /* Smaller feature highlight numbers */
+        }
+
+        .text-sm {
+          font-size: 0.8rem; /* Smaller feature highlight text */
+        }
+
+        .absolute.bottom-4 {
+          font-size: 2rem; /* Smaller bottom text on mobile */
+          white-space: normal; /* Allow text to wrap */
+          text-align: center;
+          padding: 0 1rem;
+          bottom: 1rem;
+        }
+
+        .popup {
+          padding: 1.5rem; /* Smaller padding for popups on mobile */
+          max-width: 95%; /* Adjust max-width for smaller screens */
+        }
+
+        .popup h2 {
+          font-size: 1.8rem; /* Smaller popup heading */
+        }
+
+        .popup p {
+          font-size: 1rem; /* Smaller popup paragraph */
+        }
+
+        .preorder-form-popup {
+          max-height: calc(90vh - 150px); /* Adjust max-height for mobile popup form */
+        }
+      }
+
+      @media (max-width: 480px) {
+        .text-5xl {
+          font-size: 2.5rem; /* Even smaller hero heading for very small screens */
+        }
+        .absolute.bottom-4 {
+          font-size: 1.5rem; /* Even smaller bottom text */
+        }
+      }
     </style>
   </head>
   <body class="min-h-screen gradient-bg-full">
@@ -464,8 +609,13 @@
       <!-- Logo -->
       <div class="text-white text-2xl font-semibold">ANTIQ</div>
 
-      <!-- Nav Items -->
-      <div class="flex items-center gap-6">
+      <!-- Hamburger menu icon for mobile -->
+      <div class="hamburger-menu" id="hamburgerMenu">
+        <i class="fas fa-bars"></i>
+      </div>
+
+      <!-- Nav Items (Hidden on mobile by default, shown in mobile menu overlay) -->
+      <div class="hidden md:flex items-center gap-6">
         <a
           href="index.html#home"
           class="text-white text-lg font-medium hover:text-purple-300 transition-colors duration-300"
@@ -475,6 +625,11 @@
           href="index.html#features"
           class="text-white text-lg font-medium hover:text-purple-300 transition-colors duration-300"
           >Features</a
+        >
+        <a
+          href="index.html#about"
+          class="text-white text-lg font-medium hover:text-purple-300 transition-colors duration-300"
+          >About</a
         >
         <!-- Updated Pre-order link to open form directly on this page -->
         <a
@@ -493,8 +648,25 @@
       </div>
     </nav>
 
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+      <button class="mobile-menu-close" id="mobileMenuClose">×</button>
+      <div class="nav-links">
+        <a href="index.html#home" class="nav-link">HOME</a>
+        <a href="index.html#features" class="nav-link">FEATURES</a>
+        <a href="index.html#about" class="nav-link">ABOUT</a>
+        <a href="#" onclick="showPopup('preorder'); hideMobileMenu();" class="nav-link">PRE-ORDER</a>
+        <button
+          onclick="showPopup('preorder'); hideMobileMenu();"
+          class="bg-white text-black font-semibold py-2 px-6 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75 mt-4"
+        >
+          Pre-order Now
+        </button>
+      </div>
+    </div>
+
     <!-- Main Content Area -->
-    <div class="flex flex-col lg:flex-row w-full">
+    <div class="flex flex-col lg:flex-row w-full flex-col-reverse-mobile">
       <!-- Left Section: Dark background with content -->
       <div
         class="lg:w-[55%] p-6 md:p-12 lg:p-20 flex flex-col justify-between relative z-10"
@@ -801,13 +973,39 @@
         popupOverlay.style.display = "none";
       }
 
-      // Removed the URL parameter check that redirected to index.html
-      // document.addEventListener('DOMContentLoaded', () => {
-      //     const urlParams = new URLSearchParams(window.location.search);
-      //     if (urlParams.get('openPreorder') === 'true') {
-      //         window.location.href = 'index.html?openPreorder=true';
-      //     }
-      // });
+      /**
+       * Hides the mobile menu overlay.
+       */
+      function hideMobileMenu() {
+        const mobileMenuOverlay = document.getElementById("mobileMenuOverlay");
+        if (mobileMenuOverlay) {
+          mobileMenuOverlay.classList.remove("active");
+        }
+      }
+
+      // Mobile menu toggle logic
+      document.addEventListener('DOMContentLoaded', () => {
+        const hamburgerMenu = document.getElementById("hamburgerMenu");
+        const mobileMenuOverlay = document.getElementById("mobileMenuOverlay");
+        const mobileMenuClose = document.getElementById("mobileMenuClose");
+
+        if (hamburgerMenu) {
+          hamburgerMenu.addEventListener("click", () => {
+            mobileMenuOverlay.classList.add("active");
+          });
+        }
+
+        if (mobileMenuClose) {
+          mobileMenuClose.addEventListener("click", () => {
+            mobileMenuOverlay.classList.remove("active");
+          });
+        }
+
+        // Close mobile menu when a nav link inside it is clicked
+        document.querySelectorAll('.mobile-menu-overlay .nav-link').forEach(link => {
+            link.addEventListener('click', hideMobileMenu);
+        });
+      });
     </script>
   </body>
 </html>
