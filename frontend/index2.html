@@ -18,7 +18,7 @@
         padding: 0;
         overflow-x: hidden; /* Prevent horizontal scrolling */
         background-color: rgb(11, 11, 11);
-        padding-top: 6rem; /* Added padding to prevent fixed header overlap */
+        padding-top: 6rem; /* Default padding for fixed header overlap */
       }
       /* Custom gradient background for the overall page */
       .gradient-bg-full {
@@ -334,7 +334,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        padding: 1rem 2rem;
+        padding: 1.5rem 2rem; /* Adjusted default padding for slightly shorter desktop header */
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -450,14 +450,14 @@
       /* Mobile Specific Styles */
       @media (max-width: 768px) {
         body {
-            padding-top: 6rem; /* Increased padding for smaller mobile header to ensure text visibility */
+            padding-top: 5rem; /* Adjusted padding for smaller mobile header */
         }
         .main-nav {
-          padding: 1rem; /* Smaller padding on mobile */
+          padding: 0.75rem 1rem; /* Smaller padding on mobile for shorter header */
         }
 
         .main-nav .text-2xl {
-          font-size: 1.5rem; /* Smaller logo on mobile */
+          font-size: 1.25rem; /* Smaller logo on mobile */
         }
 
         .main-nav .flex-grow {
@@ -474,17 +474,17 @@
         }
 
         .hero-content {
-            padding-top: 2rem; /* Added top padding to hero content for mobile */
+            padding-top: 1rem; /* Adjusted top padding to hero content for mobile */
         }
 
         .hero-content h1 {
-          font-size: 3rem; /* Smaller heading on mobile */
-          margin-bottom: 1rem;
+          font-size: 2.5rem; /* Smaller heading on mobile */
+          margin-bottom: 0.75rem; /* Adjusted margin */
         }
 
         .hero-content p {
-          font-size: 1rem; /* Smaller paragraph on mobile */
-          margin-bottom: 2rem;
+          font-size: 0.9rem; /* Smaller paragraph on mobile */
+          margin-bottom: 1.5rem; /* Adjusted margin */
         }
 
         .hero-content .flex-col {
@@ -492,12 +492,12 @@
         }
 
         .cta-buttons-container { /* Targeted class for CTA buttons */
-            margin-bottom: 2rem; /* Reduced margin for mobile */
+            margin-bottom: 1.5rem; /* Reduced margin for mobile */
         }
 
         .hero-content .sm:flex-row {
           flex-direction: column; /* Stack buttons vertically on mobile */
-          gap: 1rem; /* Space between stacked buttons */
+          gap: 0.75rem; /* Space between stacked buttons */
         }
 
         .feature-highlights {
@@ -509,8 +509,8 @@
           width: 95%; /* Make player box slightly smaller on mobile */
           padding: 1.5rem; /* Adjust padding */
           height: auto; /* Allow height to adjust to content */
-          min-height: 240px; /* Maintain a minimum height */
-          margin-top: 2rem; /* Add some space from the content above it */
+          min-height: 200px; /* Maintain a minimum height */
+          margin-top: 1.5rem; /* Add some space from the content above it */
         }
 
         .player-control-circle {
@@ -567,8 +567,8 @@
         }
 
         .bottom-text {
-          font-size: 2rem; /* Smaller bottom text on mobile */
-          bottom: 2rem; /* Adjust position */
+          font-size: 1.5rem; /* Smaller bottom text on mobile */
+          bottom: 1rem; /* Adjusted position */
         }
       }
     </style>
