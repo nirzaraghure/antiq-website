@@ -347,7 +347,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2rem;
+        font-size: 2rem; /* Default font size */
         opacity: 1;
         z-index: 1000;
         will-change: opacity, transform; /* Added transform for GSAP */
@@ -1074,6 +1074,14 @@
           bottom: 10px;
           left: 10px;
         }
+
+        /* Adjustments for the intro text on mobile */
+        .intro {
+          font-size: 1.5rem; /* Smaller font size for "INTRODUCING THE FUTURE" */
+        }
+        .intro .intro-text {
+          font-size: 1.5rem; /* Ensure the animated text also scales */
+        }
       }
 
       @media (max-width: 480px) {
@@ -1088,6 +1096,12 @@
         }
         .section-content {
           font-size: 0.9rem;
+        }
+        .intro {
+          font-size: 1.2rem; /* Even smaller font size for very small screens */
+        }
+        .intro .intro-text {
+          font-size: 1.2rem;
         }
       }
     </style>
@@ -1123,7 +1137,6 @@
         <a href="#home" class="nav-link active" data-section="home">HOME</a>
         <a href="#menu" class="nav-link" data-section="menu">PRODUCTS</a>
         <a href="#about" class="nav-link" data-section="about">ABOUT</a>
-        <a href="#features" class="nav-link" data-section="features">FEATURES</a>
         <a href="#services" class="nav-link" data-section="services"
           >SERVICES</a
         >
@@ -1294,7 +1307,6 @@
                     improvements, along with dedicated customer support for any
                     queries or technical assistance.
                   </p>
-                </div>
                 <div class="service-item fade-in-element">
                   <h3>Extended Warranty Plans</h3>
                   <p>
@@ -1508,7 +1520,13 @@
           0.1,
           1000
         );
-        camera.position.set(0, 0, targetZoom);
+        // Adjust initial zoom based on screen width for mobile
+        if (window.innerWidth < 768) {
+          camera.position.set(0, 0, 15); // More zoomed out for mobile
+        } else {
+          camera.position.set(0, 0, targetZoom);
+        }
+
 
         renderer = new THREE.WebGLRenderer({
           antialias: true,
@@ -1569,6 +1587,12 @@
        */
       function onWindowResize() {
         camera.aspect = window.innerWidth / window.innerHeight;
+        // Adjust zoom on resize based on screen width
+        if (window.innerWidth < 768) {
+          camera.position.z = 15; // More zoomed out for mobile
+        } else {
+          camera.position.z = targetZoom; // Use targetZoom for desktop
+        }
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       }
@@ -1586,7 +1610,12 @@
           modelUrl,
           function (gltf) {
             model = gltf.scene;
-            model.scale.set(100, 100, 100); // Increased scale for better visibility
+            // Adjust model scale based on screen size for better mobile fit
+            if (window.innerWidth < 768) {
+              model.scale.set(70, 70, 70); // Smaller scale for mobile
+            } else {
+              model.scale.set(100, 100, 100); // Original scale for desktop
+            }
             model.position.set(0, 0, 0); // Center the model, will be adjusted by targetPositionY
             // Set initial rotation based on home section properties
             model.rotation.set(0, sectionModelProperties.home.rotationY, 0);
@@ -1747,12 +1776,15 @@
             modelAngleDisplay.innerHTML = `Y: ${rotationYDegrees}° | X: ${rotationXDegrees}°`;
           }
         }
+        // Only lerp camera zoom if not on mobile, or if mobile, use fixed zoom
+        if (window.innerWidth >= 768) {
+          camera.position.z = THREE.MathUtils.lerp(
+            camera.position.z,
+            targetZoom,
+            0.05
+          );
+        }
 
-        camera.position.z = THREE.MathUtils.lerp(
-          camera.position.z,
-          targetZoom,
-          0.05
-        );
 
         if (waveMesh) {
           const positions = waveMesh.geometry.attributes.position.array;
@@ -1821,7 +1853,10 @@
           targetRotationY = props.rotationY; // Update target Y rotation based on section
           targetPositionX = props.positionX;
           targetPositionY = props.positionY || 0;
-          targetZoom = props.zoom;
+          // Only update targetZoom if on desktop, otherwise keep mobile zoom
+          if (window.innerWidth >= 768) {
+            targetZoom = props.zoom;
+          }
         }
       }
 
@@ -1964,11 +1999,14 @@
               duration: 0.8,
               ease: "power2.out",
             });
-            gsap.to(camera.position, {
-              z: props.zoom,
-              duration: 0.8,
-              ease: "power2.out",
-            });
+            // Only reset camera zoom if on desktop
+            if (window.innerWidth >= 768) {
+              gsap.to(camera.position, {
+                z: props.zoom,
+                duration: 0.8,
+                ease: "power2.out",
+              });
+            }
           }
         }
       }
