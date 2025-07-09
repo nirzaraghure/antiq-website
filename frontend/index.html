@@ -184,18 +184,17 @@
         background: rgba(11, 10, 10, 0.98); /* Make background more opaque for visibility */
         backdrop-filter: blur(15px);
         z-index: 1000; /* Ensure it's on top */
-        display: flex; /* Always flex, control visibility with opacity/pointer-events */
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        opacity: 0;
-        pointer-events: none; /* Do not interact when hidden */
-        transition: opacity 0.3s ease, transform 0.3s ease;
+        opacity: 0; /* Initially hidden */
+        display: none; /* Initially hidden */
+        transition: opacity 0.3s ease; /* Transition for fade effect */
       }
 
       .mobile-menu-overlay.active {
-        opacity: 1;
-        pointer-events: auto; /* Allow interaction when active */
+        display: flex; /* Show when active */
+        opacity: 1; /* Fade in when active */
       }
 
       .mobile-menu-close {
@@ -215,11 +214,14 @@
         flex-direction: column;
         gap: 2rem;
         margin-right: 0;
+        width: 100%;
+        padding: 0 20px;
+        text-align: center;
       }
 
       .mobile-menu-overlay .nav-link {
         font-size: 1.5rem;
-        padding: 0.8rem 0;
+        padding: 0.5rem 0;
         display: block;
         width: 100%;
         color: white !important; /* Explicitly set font color for mobile links */
@@ -1035,18 +1037,17 @@
           height: 100%;
           background: rgba(0, 0, 0, 0.95);
           z-index: 1000;
-          display: flex; /* Always flex, control visibility with opacity/pointer-events */
           flex-direction: column;
           justify-content: center;
           align-items: center;
           opacity: 0;
-          pointer-events: none; /* Do not interact when hidden */
-          transition: opacity 0.3s ease, transform 0.3s ease;
+          display: none; /* Control visibility with display property */
+          transition: opacity 0.3s ease;
         }
 
         .mobile-menu-overlay.active {
-          opacity: 1;
-          pointer-events: auto; /* Allow interaction when active */
+          display: flex; /* Show when active */
+          opacity: 1; /* Fade in when active */
         }
 
         .mobile-menu-close {
@@ -1068,8 +1069,8 @@
           width: 100%;
           padding: 0 20px;
           text-align: center;
-          background-color: rgba(255, 0, 0, 0.3); /* DEBUG: Red background to see if it appears */
-          height: fit-content; /* Ensure it takes content height */
+          /* Removed debug styles */
+          height: fit-content;
         }
 
         .mobile-menu-overlay .nav-link {
@@ -1077,8 +1078,8 @@
           padding: 0.5rem 0;
           display: block;
           width: 100%;
-          color: yellow !important; /* DEBUG: Yellow text to see if it appears */
-          border: 1px solid blue; /* DEBUG: Blue border to see link boundaries */
+          color: white !important; /* Explicitly set font color for mobile links */
+          /* Removed debug styles */
         }
 
         .mobile-menu-overlay .nav-preorder-button {
@@ -1185,8 +1186,8 @@
       @media (max-width: 480px) {
         .mobile-menu-overlay .nav-link {
           font-size: 1.2rem;
-          color: yellow !important; /* DEBUG: Yellow text for smaller screens */
-          border: 1px solid blue; /* DEBUG: Blue border for smaller screens */
+          color: white !important; /* Explicitly set font color for mobile links on smaller screens */
+          /* Removed debug styles */
         }
 
         .mobile-menu-overlay .nav-preorder-button {
