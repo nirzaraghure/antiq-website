@@ -176,7 +176,6 @@
 
       /* Mobile menu overlay */
       .mobile-menu-overlay {
-        display: none; /* Hidden by default */
         position: fixed;
         top: 0;
         left: 0;
@@ -184,19 +183,30 @@
         height: 100vh; /* Ensure full viewport height */
         background: rgba(11, 10, 10, 0.98); /* Make background more opaque for visibility */
         backdrop-filter: blur(15px);
-        z-index: 999; /* Increased z-index to ensure it's on top */
+        z-index: 1000; /* Ensure it's on top */
+        display: flex; /* Always flex, control visibility with opacity/pointer-events */
         flex-direction: column;
         align-items: center;
         justify-content: center;
         opacity: 0;
-        transform: translateX(100%);
+        pointer-events: none; /* Do not interact when hidden */
         transition: opacity 0.3s ease, transform 0.3s ease;
       }
 
       .mobile-menu-overlay.active {
-        display: flex;
         opacity: 1;
-        transform: translateX(0);
+        pointer-events: auto; /* Allow interaction when active */
+      }
+
+      .mobile-menu-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 2.5rem; /* Slightly larger for easier tapping */
+        color: white !important; /* Force white color */
+        background: none;
+        border: none;
+        cursor: pointer;
       }
 
       .mobile-menu-overlay .nav-links {
@@ -210,19 +220,9 @@
       .mobile-menu-overlay .nav-link {
         font-size: 1.5rem;
         padding: 0.8rem 0;
-        color: white; /* Explicitly set font color for mobile links */
-      }
-
-      /* Close button for mobile menu */
-      .mobile-menu-close {
-        position: absolute;
-        top: 1.5rem;
-        right: 2rem;
-        font-size: 2rem;
-        color: white;
-        cursor: pointer;
-        background: none;
-        border: none;
+        display: block;
+        width: 100%;
+        color: white !important; /* Explicitly set font color for mobile links */
       }
 
       /* Model Canvas Styles */
@@ -1035,24 +1035,26 @@
           height: 100%;
           background: rgba(0, 0, 0, 0.95);
           z-index: 1000;
-          display: none;
+          display: flex; /* Always flex, control visibility with opacity/pointer-events */
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          transition: opacity 0.3s ease;
+          opacity: 0;
+          pointer-events: none; /* Do not interact when hidden */
+          transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .mobile-menu-overlay.active {
-          display: flex;
           opacity: 1;
+          pointer-events: auto; /* Allow interaction when active */
         }
 
         .mobile-menu-close {
           position: absolute;
           top: 20px;
           right: 20px;
-          font-size: 2rem;
-          color: white;
+          font-size: 2.5rem; /* Slightly larger for easier tapping */
+          color: white !important; /* Force white color */
           background: none;
           border: none;
           cursor: pointer;
@@ -1073,7 +1075,7 @@
           padding: 0.5rem 0;
           display: block;
           width: 100%;
-          color: white; /* Explicitly set font color for mobile links */
+          color: white !important; /* Explicitly set font color for mobile links */
         }
 
         .mobile-menu-overlay .nav-preorder-button {
@@ -1180,7 +1182,7 @@
       @media (max-width: 480px) {
         .mobile-menu-overlay .nav-link {
           font-size: 1.2rem;
-          color: white; /* Explicitly set font color for mobile links on smaller screens */
+          color: white !important; /* Explicitly set font color for mobile links on smaller screens */
         }
 
         .mobile-menu-overlay .nav-preorder-button {
