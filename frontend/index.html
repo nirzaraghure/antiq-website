@@ -1068,6 +1068,8 @@
           width: 100%;
           padding: 0 20px;
           text-align: center;
+          background-color: rgba(255, 0, 0, 0.3); /* DEBUG: Red background to see if it appears */
+          height: fit-content; /* Ensure it takes content height */
         }
 
         .mobile-menu-overlay .nav-link {
@@ -1075,7 +1077,8 @@
           padding: 0.5rem 0;
           display: block;
           width: 100%;
-          color: white !important; /* Explicitly set font color for mobile links */
+          color: yellow !important; /* DEBUG: Yellow text to see if it appears */
+          border: 1px solid blue; /* DEBUG: Blue border to see link boundaries */
         }
 
         .mobile-menu-overlay .nav-preorder-button {
@@ -1182,7 +1185,8 @@
       @media (max-width: 480px) {
         .mobile-menu-overlay .nav-link {
           font-size: 1.2rem;
-          color: white !important; /* Explicitly set font color for mobile links on smaller screens */
+          color: yellow !important; /* DEBUG: Yellow text for smaller screens */
+          border: 1px solid blue; /* DEBUG: Blue border for smaller screens */
         }
 
         .mobile-menu-overlay .nav-preorder-button {
