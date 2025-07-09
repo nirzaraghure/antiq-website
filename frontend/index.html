@@ -200,6 +200,8 @@
       }
 
       .mobile-menu-overlay .nav-links {
+        /* Ensure nav-links inside mobile overlay are always flex and visible */
+        display: flex;
         flex-direction: column;
         gap: 2rem;
         margin-right: 0;
@@ -208,6 +210,7 @@
       .mobile-menu-overlay .nav-link {
         font-size: 1.5rem;
         padding: 0.8rem 0;
+        color: white; /* Explicitly set font color for mobile links */
       }
 
       /* Close button for mobile menu */
@@ -1056,6 +1059,7 @@
         }
 
         .mobile-menu-overlay .nav-links {
+          /* Ensure nav-links inside mobile overlay are always flex and visible */
           display: flex;
           flex-direction: column;
           gap: 2rem;
@@ -1069,6 +1073,7 @@
           padding: 0.5rem 0;
           display: block;
           width: 100%;
+          color: white; /* Explicitly set font color for mobile links */
         }
 
         .mobile-menu-overlay .nav-preorder-button {
@@ -1175,6 +1180,7 @@
       @media (max-width: 480px) {
         .mobile-menu-overlay .nav-link {
           font-size: 1.2rem;
+          color: white; /* Explicitly set font color for mobile links on smaller screens */
         }
 
         .mobile-menu-overlay .nav-preorder-button {
