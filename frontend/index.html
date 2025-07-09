@@ -994,7 +994,17 @@
       /* Responsive adjustments */
       @media (max-width: 768px) {
         .main-nav {
-          padding: 0.8rem 1.5rem; /* Adjust padding for smaller screens */
+          padding: 0.8rem 1rem; /* Adjust padding for smaller screens */
+        }
+
+        .nav-logo {
+          height: 40px;
+          width: 40px;
+        }
+
+        .main-nav.scrolled .nav-logo {
+          height: 35px;
+          width: 35px;
         }
 
         .nav-links {
@@ -1006,7 +1016,65 @@
         }
 
         .hamburger-menu {
-          display: block; /* Show hamburger menu icon */
+          display: flex !important; /* Force show on mobile */
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          margin-left: auto; /* Push to the right */
+        }
+
+        .mobile-menu-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.95);
+          z-index: 1000;
+          display: none;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          transition: opacity 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+          display: flex;
+          opacity: 1;
+        }
+
+        .mobile-menu-close {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          font-size: 2rem;
+          color: white;
+          background: none;
+          border: none;
+          cursor: pointer;
+        }
+
+        .mobile-menu-overlay .nav-links {
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+          width: 100%;
+          padding: 0 20px;
+          text-align: center;
+        }
+
+        .mobile-menu-overlay .nav-link {
+          font-size: 1.5rem;
+          padding: 0.5rem 0;
+          display: block;
+          width: 100%;
+        }
+
+        .mobile-menu-overlay .nav-preorder-button {
+          margin-top: 1rem;
+          font-size: 1.2rem;
+          padding: 0.8rem 1.5rem;
         }
 
         .split-view {
@@ -1020,16 +1088,36 @@
           min-height: unset; /* Remove min-height for mobile */
         }
 
-        .ion-title {
-          font-size: 3rem;
+        .content-section {
+          padding-top: 70px; /* Make space for fixed header */
+        }
+
+        .content-half {
+          padding: 1.5rem;
         }
 
         .section-title {
           font-size: 2rem;
+          margin-bottom: 1.5rem;
         }
 
         .section-content {
           font-size: 1rem;
+        }
+
+        .ion-title {
+          font-size: 3rem;
+          margin-top: 0.5rem;
+        }
+
+        .ion-headline {
+          font-size: 1rem;
+          margin-top: 1rem;
+        }
+
+        .ion-container {
+          padding-top: 10vh;
+          transform: scale(1.2);
         }
 
         .popup {
@@ -1085,6 +1173,14 @@
       }
 
       @media (max-width: 480px) {
+        .mobile-menu-overlay .nav-link {
+          font-size: 1.2rem;
+        }
+
+        .mobile-menu-overlay .nav-preorder-button {
+          font-size: 1rem;
+        }
+
         .ion-title {
           font-size: 2.5rem; /* Further adjusted for very small screens */
         }
@@ -2281,6 +2377,7 @@
               document.getElementById("mobileMenuOverlay");
             if (mobileMenuOverlay.classList.contains("active")) {
               mobileMenuOverlay.classList.remove("active");
+              document.body.style.overflow = "auto"; // Re-enable scrolling
             }
           }
         }
@@ -2359,16 +2456,27 @@
         const mobileMenuClose = document.getElementById("mobileMenuClose");
 
         if (hamburgerMenu) {
-          hamburgerMenu.addEventListener("click", () => {
+          hamburgerMenu.addEventListener("click", (e) => {
+            e.stopPropagation();
             mobileMenuOverlay.classList.add("active");
+            document.body.style.overflow = "hidden"; // Prevent scrolling when menu is open
           });
         }
 
         if (mobileMenuClose) {
           mobileMenuClose.addEventListener("click", () => {
             mobileMenuOverlay.classList.remove("active");
+            document.body.style.overflow = "auto"; // Re-enable scrolling
           });
         }
+
+        // Close menu when clicking outside content
+        mobileMenuOverlay.addEventListener("click", (e) => {
+          if (e.target === mobileMenuOverlay) {
+            mobileMenuOverlay.classList.remove("active");
+            document.body.style.overflow = "auto";
+          }
+        });
 
         // Close mobile menu when an internal link inside it is clicked
         document
