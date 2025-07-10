@@ -557,7 +557,10 @@
           font-size: 0.9rem; /* Smaller form labels */
         }
 
-        .preorder-form-popup input,
+        .preorder-form-popup input[type="text"],
+        .preorder-form-popup input[type="email"],
+        .preorder-form-popup input[type="tel"],
+        .preorder-form-popup input[type="number"], /* Added input[type="number"] */
         .preorder-form-popup textarea,
         .preorder-form-popup select {
           padding: 0.8rem; /* Smaller input padding */
