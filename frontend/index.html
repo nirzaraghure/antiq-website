@@ -186,7 +186,7 @@
         z-index: 1000; /* Ensure it's on top */
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: center; /* Center content vertically */
         opacity: 0; /* Initially hidden */
         pointer-events: none; /* Allow clicks to pass through when hidden */
         transition: opacity 0.3s ease; /* Transition for fade effect */
@@ -199,16 +199,7 @@
         visibility: visible; /* Make visible when active */
       }
 
-      .mobile-menu-close {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        font-size: 2.5rem; /* Slightly larger for easier tapping */
-        color: white !important; /* Force white color */
-        background: none;
-        border: none;
-        cursor: pointer;
-      }
+      /* Removed .mobile-menu-close styles as the button is removed */
 
       .mobile-menu-overlay .nav-links {
         /* Ensure nav-links inside mobile overlay are always flex and visible */
@@ -1054,16 +1045,7 @@
           visibility: visible; /* Make visible when active */
         }
 
-        .mobile-menu-close {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          font-size: 2.5rem; /* Slightly larger for easier tapping */
-          color: white !important; /* Force white color */
-          background: none;
-          border: none;
-          cursor: pointer;
-        }
+        /* Removed .mobile-menu-close styles for mobile */
 
         .mobile-menu-overlay .nav-links {
           /* Ensure nav-links inside mobile overlay are always flex and visible */
@@ -1246,7 +1228,7 @@
 
     <!-- Mobile Menu Overlay -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay">
-      <button class="mobile-menu-close" id="mobileMenuClose">×</button>
+      <!-- Removed the close button as per request -->
       <div class="nav-links">
         <a href="#home" class="nav-link active" data-section="home">HOME</a>
         <a href="#menu" class="nav-link" data-section="menu">PRODUCTS</a>
@@ -2469,7 +2451,7 @@
         // Mobile menu toggle logic
         const hamburgerMenu = document.getElementById("hamburgerMenu");
         const mobileMenuOverlay = document.getElementById("mobileMenuOverlay");
-        const mobileMenuClose = document.getElementById("mobileMenuClose");
+        // Removed mobileMenuClose as per request
 
         // Function to open mobile menu
         function openMobileMenu() {
@@ -2498,12 +2480,11 @@
           hamburgerMenu.addEventListener("click", openMobileMenu);
         }
 
-        if (mobileMenuClose) {
-          mobileMenuClose.addEventListener("click", closeMobileMenu);
-        }
+        // Removed the mobileMenuClose event listener as the button is removed
 
         // Close menu when clicking outside content
         mobileMenuOverlay.addEventListener("click", (e) => {
+          // Ensure click is directly on the overlay, not its children (links)
           if (e.target === mobileMenuOverlay) {
             closeMobileMenu();
           }
