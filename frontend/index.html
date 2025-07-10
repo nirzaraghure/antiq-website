@@ -190,12 +190,13 @@
         opacity: 0; /* Initially hidden */
         pointer-events: none; /* Allow clicks to pass through when hidden */
         transition: opacity 0.3s ease; /* Transition for fade effect */
-        display: none; /* Initially hidden, will be set to flex by JS on open */
+        visibility: hidden; /* Changed from display: none */
       }
 
       .mobile-menu-overlay.active {
         opacity: 1; /* Fade in when active */
         pointer-events: auto; /* Enable clicks when active */
+        visibility: visible; /* Make visible when active */
       }
 
       .mobile-menu-close {
@@ -1044,12 +1045,13 @@
           opacity: 0;
           pointer-events: none; /* Allow clicks to pass through when hidden */
           transition: opacity 0.3s ease;
-          /* Removed display: none from here directly, handled by JS on open/close */
+          visibility: hidden; /* Changed from display: none */
         }
 
         .mobile-menu-overlay.active {
           opacity: 1; /* Fade in when active */
           pointer-events: auto; /* Enable clicks when active */
+          visibility: visible; /* Make visible when active */
         }
 
         .mobile-menu-close {
@@ -2471,8 +2473,8 @@
 
         // Function to open mobile menu
         function openMobileMenu() {
-            mobileMenuOverlay.style.display = 'flex'; // Make it display flex immediately
-            // Use a small timeout to allow display:flex to apply before opacity transition starts
+            mobileMenuOverlay.style.visibility = 'visible'; // Make it visible immediately
+            // Use a small timeout to allow visibility to apply before opacity transition starts
             setTimeout(() => {
                 mobileMenuOverlay.classList.add("active");
                 mobileMenuOverlay.style.pointerEvents = 'auto'; // Enable pointer events
@@ -2485,14 +2487,10 @@
             mobileMenuOverlay.classList.remove("active");
             document.body.style.overflow = "auto"; // Re-enable scrolling
             mobileMenuOverlay.style.pointerEvents = 'none'; // Disable pointer events immediately
-            // Add a transitionend listener to set display: none after fade out
-            mobileMenuOverlay.addEventListener('transitionend', function handler(event) {
-                // Ensure the transition for opacity is what triggered this
-                if (event.propertyName === 'opacity' && !mobileMenuOverlay.classList.contains('active')) {
-                    mobileMenuOverlay.style.display = 'none'; // Hide completely after fade out
-                }
-                mobileMenuOverlay.removeEventListener('transitionend', handler); // Remove listener after execution
-            });
+            // Add a timeout to set visibility: hidden after the opacity transition duration
+            setTimeout(() => {
+                mobileMenuOverlay.style.visibility = 'hidden'; // Hide completely after fade out
+            }, 300); // Match the CSS transition duration for opacity
         }
 
 
