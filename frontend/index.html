@@ -188,13 +188,14 @@
         align-items: center;
         justify-content: center;
         opacity: 0; /* Initially hidden */
-        display: none; /* Initially hidden */
+        pointer-events: none; /* Allow clicks to pass through when hidden */
         transition: opacity 0.3s ease; /* Transition for fade effect */
+        display: none; /* Initially hidden, will be set to flex by JS on open */
       }
 
       .mobile-menu-overlay.active {
-        display: flex; /* Show when active */
         opacity: 1; /* Fade in when active */
+        pointer-events: auto; /* Enable clicks when active */
       }
 
       .mobile-menu-close {
@@ -1041,13 +1042,14 @@
           justify-content: center;
           align-items: center;
           opacity: 0;
-          display: none; /* Control visibility with display property */
+          pointer-events: none; /* Allow clicks to pass through when hidden */
           transition: opacity 0.3s ease;
+          /* Removed display: none from here directly, handled by JS on open/close */
         }
 
         .mobile-menu-overlay.active {
-          display: flex; /* Show when active */
           opacity: 1; /* Fade in when active */
+          pointer-events: auto; /* Enable clicks when active */
         }
 
         .mobile-menu-close {
@@ -2389,8 +2391,7 @@
             const mobileMenuOverlay =
               document.getElementById("mobileMenuOverlay");
             if (mobileMenuOverlay.classList.contains("active")) {
-              mobileMenuOverlay.classList.remove("active");
-              document.body.style.overflow = "auto"; // Re-enable scrolling
+              closeMobileMenu(); // Use the new close function
             }
           }
         }
@@ -2468,26 +2469,45 @@
         const mobileMenuOverlay = document.getElementById("mobileMenuOverlay");
         const mobileMenuClose = document.getElementById("mobileMenuClose");
 
-        if (hamburgerMenu) {
-          hamburgerMenu.addEventListener("click", (e) => {
-            e.stopPropagation();
-            mobileMenuOverlay.classList.add("active");
+        // Function to open mobile menu
+        function openMobileMenu() {
+            mobileMenuOverlay.style.display = 'flex'; // Make it display flex immediately
+            // Use a small timeout to allow display:flex to apply before opacity transition starts
+            setTimeout(() => {
+                mobileMenuOverlay.classList.add("active");
+                mobileMenuOverlay.style.pointerEvents = 'auto'; // Enable pointer events
+            }, 10);
             document.body.style.overflow = "hidden"; // Prevent scrolling when menu is open
-          });
+        }
+
+        // Function to close mobile menu
+        function closeMobileMenu() {
+            mobileMenuOverlay.classList.remove("active");
+            document.body.style.overflow = "auto"; // Re-enable scrolling
+            mobileMenuOverlay.style.pointerEvents = 'none'; // Disable pointer events immediately
+            // Add a transitionend listener to set display: none after fade out
+            mobileMenuOverlay.addEventListener('transitionend', function handler(event) {
+                // Ensure the transition for opacity is what triggered this
+                if (event.propertyName === 'opacity' && !mobileMenuOverlay.classList.contains('active')) {
+                    mobileMenuOverlay.style.display = 'none'; // Hide completely after fade out
+                }
+                mobileMenuOverlay.removeEventListener('transitionend', handler); // Remove listener after execution
+            });
+        }
+
+
+        if (hamburgerMenu) {
+          hamburgerMenu.addEventListener("click", openMobileMenu);
         }
 
         if (mobileMenuClose) {
-          mobileMenuClose.addEventListener("click", () => {
-            mobileMenuOverlay.classList.remove("active");
-            document.body.style.overflow = "auto"; // Re-enable scrolling
-          });
+          mobileMenuClose.addEventListener("click", closeMobileMenu);
         }
 
         // Close menu when clicking outside content
         mobileMenuOverlay.addEventListener("click", (e) => {
           if (e.target === mobileMenuOverlay) {
-            mobileMenuOverlay.classList.remove("active");
-            document.body.style.overflow = "auto";
+            closeMobileMenu();
           }
         });
 
@@ -2497,7 +2517,10 @@
             ".mobile-menu-overlay .nav-links .nav-link[href^='#']"
           )
           .forEach((link) => {
-            link.addEventListener("click", handleNavClick); // Re-use handleNavClick
+            link.addEventListener("click", (event) => {
+                handleNavClick(event); // Re-use handleNavClick for scrolling
+                closeMobileMenu(); // Explicitly close the mobile menu after click
+            });
           });
 
         const contactForm = document.getElementById("contactForm");
