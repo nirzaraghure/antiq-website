@@ -184,6 +184,7 @@
         background: rgba(11, 10, 10, 0.98); /* Make background more opaque for visibility */
         backdrop-filter: blur(15px);
         z-index: 1000; /* Ensure it's on top */
+        display: flex; /* Keep display flex for centering */
         flex-direction: column;
         align-items: center;
         justify-content: center; /* Center content vertically */
@@ -1031,31 +1032,27 @@
           background: rgba(0, 0, 0, 0.95);
           z-index: 1000;
           flex-direction: column;
-          justify-content: center;
+          justify-content: center; /* Center vertically */
           align-items: center;
           opacity: 0;
           pointer-events: none; /* Allow clicks to pass through when hidden */
           transition: opacity 0.3s ease;
-          visibility: hidden; /* Changed from display: none */
+          visibility: hidden;
         }
 
         .mobile-menu-overlay.active {
           opacity: 1; /* Fade in when active */
           pointer-events: auto; /* Enable clicks when active */
-          visibility: visible; /* Make visible when active */
+          visibility: visible;
         }
 
-        /* Removed .mobile-menu-close styles for mobile */
-
         .mobile-menu-overlay .nav-links {
-          /* Ensure nav-links inside mobile overlay are always flex and visible */
           display: flex;
           flex-direction: column;
           gap: 2rem;
           width: 100%;
           padding: 0 20px;
           text-align: center;
-          /* Removed debug styles */
           height: fit-content;
         }
 
@@ -1064,8 +1061,7 @@
           padding: 0.5rem 0;
           display: block;
           width: 100%;
-          color: white !important; /* Explicitly set font color for mobile links */
-          /* Removed debug styles */
+          color: white !important;
         }
 
         .mobile-menu-overlay .nav-preorder-button {
@@ -1080,13 +1076,13 @@
 
         .content-half {
           width: 100%;
-          height: auto; /* Allow height to adjust based on content */
+          height: auto;
           padding: 2rem;
-          min-height: unset; /* Remove min-height for mobile */
+          min-height: unset;
         }
 
         .content-section {
-          padding-top: 70px; /* Make space for fixed header */
+          padding-top: 70px;
         }
 
         .content-half {
@@ -1118,34 +1114,34 @@
         }
 
         .popup {
-          padding: 1.5rem; /* Smaller padding on mobile */
-          max-width: 90%; /* Ensure it doesn't overflow on very small screens */
+          padding: 1.5rem;
+          max-width: 90%;
         }
 
         .popup h2 {
-          font-size: 1.5rem; /* Smaller heading on mobile */
+          font-size: 1.5rem;
         }
 
         .popup p {
-          font-size: 0.9rem; /* Smaller paragraph on mobile */
+          font-size: 0.9rem;
         }
 
         .preorder-form-popup input,
         .preorder-form-popup select,
         .preorder-form-popup textarea {
-          padding: 0.8rem; /* Smaller input padding on mobile */
-          font-size: 0.9rem; /* Smaller input font on mobile */
+          padding: 0.8rem;
+          font-size: 0.9rem;
         }
 
         .preorder-form-popup .submit-btn {
-          padding: 1rem; /* Smaller button padding on mobile */
-          font-size: 1rem; /* Smaller button font on mobile */
+          padding: 1rem;
+          font-size: 1rem;
         }
 
         .menu-grid,
         .specs-grid,
         .testimonials {
-          grid-template-columns: 1fr; /* Stack columns on mobile */
+          grid-template-columns: 1fr;
           gap: 1.5rem;
         }
 
@@ -1154,7 +1150,7 @@
         }
 
         .model-angle-display {
-          font-size: 0.7rem; /* Smaller font for mobile */
+          font-size: 0.7rem;
           padding: 0.6rem 1rem;
           bottom: 10px;
           left: 10px;
@@ -1162,7 +1158,7 @@
 
         /* Adjustments for the intro text on mobile */
         .intro {
-          font-size: 1.5rem; /* Smaller font size for "INTRODUCING THE FUTURE" */
+          font-size: 1.5rem;
         }
         .intro .intro-text {
           font-size: 1.5rem;
@@ -1172,8 +1168,7 @@
       @media (max-width: 480px) {
         .mobile-menu-overlay .nav-link {
           font-size: 1.2rem;
-          color: white !important; /* Explicitly set font color for mobile links on smaller screens */
-          /* Removed debug styles */
+          color: white !important;
         }
 
         .mobile-menu-overlay .nav-preorder-button {
@@ -1181,7 +1176,7 @@
         }
 
         .ion-title {
-          font-size: 2.5rem; /* Further adjusted for very small screens */
+          font-size: 2.5rem;
         }
         .ion-headline {
           font-size: 1rem;
@@ -1193,7 +1188,7 @@
           font-size: 0.9rem;
         }
         .intro {
-          font-size: 1.2rem; /* Even smaller font size for very small screens */
+          font-size: 1.2rem;
         }
         .intro .intro-text {
           font-size: 1.2rem;
